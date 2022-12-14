@@ -1,0 +1,26 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/compute_resource_module.html#ansible-collections-theforeman-foreman-compute-resource-module
+- name: compute_resource
+  theforeman.foreman.compute_resource:
+    description: "{{ loop_compute_resource.description | default('') }}"
+    locations: "{{ loop_compute_resource.locations | default(tp_foreman_configure_default_locations) }}"
+    name: "{{ loop_compute_resource.name }}"
+    organizations: "{{ loop_compute_resource.organizations | default(tp_foreman_configure_default_organizations) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    provider: "{{ loop_compute_resource.provider }}"
+    provider_params: "{{ loop_compute_resource.provider_params }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default('present') }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_compute_resources }}"
+  loop_control:
+    loop_var: loop_compute_resource
+    label: "{{ loop_compute_resource.name }} [{{ loop_compute_resource.provider }}]"
+  tags:
+    - compute_resource
+    - compute_attribute
+    - compute_profile
+    - host
+    - hostgroup
+    - image

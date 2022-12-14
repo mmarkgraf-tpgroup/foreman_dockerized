@@ -1,0 +1,33 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/smart_class_parameter_module.html#ansible-collections-theforeman-foreman-smart-class-parameter-module
+
+# avoid_duplicates can only be set for parameter_types 'hash' or 'array'
+# merge_default    can only be set for parameter_types 'hash' or 'array'
+# merge_overrides  can only be set for parameter_types 'hash' or 'array'
+- name: smart_class_parameter
+  theforeman.foreman.smart_class_parameter:
+    avoid_duplicates: "{{ loop_smart_class_parameter.avoid_duplicates|default(omit) if ( loop_smart_class_parameter.parameter_type == 'array' or loop_smart_class_parameter.parameter_type == 'hash' ) else omit }}"
+    default_value: "{{ loop_smart_class_parameter.default_value | default(omit) }}"
+    description: "{{ loop_smart_class_parameter.description | default(omit) }}"
+    hidden_value: "{{ loop_smart_class_parameter.hidden_value | default(omit) }}"
+    merge_default: "{{ loop_smart_class_parameter.merge_default|default(omit) if ( loop_smart_class_parameter.parameter_type == 'array' or loop_smart_class_parameter.parameter_type == 'hash' ) else omit }}"
+    merge_overrides: "{{ loop_smart_class_parameter.merge_overrides|default(omit) if ( loop_smart_class_parameter.parameter_type == 'array' or loop_smart_class_parameter.parameter_type == 'hash' ) else omit }}"
+    override: "{{ loop_smart_class_parameter.override | default(omit) }}"
+    override_value_order: "{{ loop_smart_class_parameter.override_value_order | default(omit) }}"
+    override_values: "{{ loop_smart_class_parameter.override_values | default(omit) }}"
+    parameter: "{{ loop_smart_class_parameter.parameter }}"
+    parameter_type: "{{ loop_smart_class_parameter.parameter_type | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    puppetclass_name: "{{ loop_smart_class_parameter.puppetclass_name }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+    validator_rule: "{{ loop_smart_class_parameter.validator_rule | default(omit) }}"
+    validator_type: "{{ loop_smart_class_parameter.validator_type | default(omit) }}"
+  loop: "{{ tp_foreman_configure_smart_class_parameters }}"
+  loop_control:
+    loop_var: loop_smart_class_parameter
+    label: "{{ loop_smart_class_parameter.parameter }}"
+  tags:
+    - smart_class_parameter

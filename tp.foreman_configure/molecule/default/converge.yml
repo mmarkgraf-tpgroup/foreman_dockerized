@@ -1,0 +1,128 @@
+---
+- name: Converge
+  hosts: all
+
+  vars:
+    converge_pass: Gandalf
+
+  tasks:
+    - name: Packages for debugging
+      package:
+        name:
+          - net-tools
+          - vim
+          - curl
+      become: True
+      tags: ['always']
+
+    - name: Include tp.foreman_configure
+      include_role:
+        name: tp.foreman_configure
+      tags: ['always']
+      vars:
+        ansible_domain: localdomain
+        tp_foreman_configure_published_ports:
+          - 0.0.0.0:8080:3000
+        tp_foreman_configure_root_password: "{{ converge_pass }}"
+        stage: development
+
+        tp_foreman_configure_server_url: http://localhost:8080
+        tp_foreman_configure_user: admin
+        tp_foreman_configure_password: "{{ converge_pass }}"
+
+        tp_foreman_configure_architectures:
+          - name: armstrong
+          - name: funstuff
+            operatingsystems:
+              - Kali
+              - KaOS
+
+        tp_foreman_configure_auth_source_ldaps:
+          - name: some.where
+            account: ldap@some.where
+            attr_firstname: givenName
+            attr_lastname: sn
+            attr_login: userPrincipalName
+            attr_mail: mail
+            base_dn: OU=Users,OU=Transporeon,DC=tp,DC=nil
+            groups_base: OU=Transporeon,DC=tp,DC=nil
+            host: some.where
+            onthefly_register: true
+            port: 389
+            server_type: active_directory
+            tls: false
+            type: AuthSourceLdap
+            usergroup_sync: true
+
+        tp_foreman_configure_bookmarks:
+        - name: coyote
+          controller: hosts
+          query: coyote
+          public: true
+
+        tp_foreman_configure_compute_profiles:
+          - name: 4-Xlarge
+          - name: 5-XXLarge
+
+        tp_foreman_configure_compute_resources: []
+        #  - name: example_compute_resource
+        #    description:
+        #    locations:
+        #      - Ulm
+        #    organizations:
+        #      - ACME
+        #    provider: vmware
+        #    provider_params:
+        #      caching_enabled: false
+        #      url: vcenter.acme.org
+        #      user: admin
+        #      password: secret
+        #      datacenter: nowhere
+
+        tp_foreman_configure_domains:
+          - name: acme.org
+            description: Example Domain
+            locations:
+              - Ulm
+            organizations:
+              - ACME
+
+        tp_foreman_configure_hosts:
+          - name: coyote.acme.org
+            compute_profile: 1-Small
+            operatingsystem: Debian 10
+            organization: ACME
+            location: Ulm
+            architecture: x86_64
+            mac: EE:BB:01:02:03:04
+          - name: roadrunner.acme.org
+            compute_profile: 1-Small
+            operatingsystem: Debian 10
+            organization: ACME
+            location: Ulm
+            architecture: x86_64
+            mac: EE:BB:01:02:03:05
+
+        tp_foreman_configure_locations:
+          - name: Ulm
+            organizations:
+              - ACME
+
+        tp_foreman_configure_organizations:
+          - name: ACME
+
+        tp_foreman_configure_operatingsystems:
+          - name: Debian
+            major: '10'
+            minor: '4'
+            os_family: Debian
+            password_hash: SHA256
+            release_name: buster
+            architectures:
+              - x86_64
+              - i386
+
+        tp_foreman_configure_puppet_environments:
+          - name: great_canyon
+            organization: ACME
+            location: Ulm

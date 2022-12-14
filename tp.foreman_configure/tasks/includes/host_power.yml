@@ -1,0 +1,16 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/host_power_module.html#ansible-collections-theforeman-foreman-host-power-module
+- name: host_power
+  theforeman.foreman.host_power:
+    name: "{{ loop_host_power.name }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(state) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_host_powers }}"
+  loop_control:
+    loop_var: loop_host_power
+    label: "{{ loop_host_power.name }} [{{ loop_auth_source_ldap.state | default(state) }}]"
+  tags:
+    - host_power

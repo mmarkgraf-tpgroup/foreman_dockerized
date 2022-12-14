@@ -1,0 +1,33 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/user_module.html#ansible-collections-theforeman-foreman-user-module
+
+- name: user
+  theforeman.foreman.user:
+    admin: "{{ loop_user.admin | default(omit) }}"
+    auth_source: "{{ loop_user.auth_source | default(omit) }}"
+    default_location: "{{ loop_user.default_location | default(omit) }}"
+    default_organization: "{{ loop_user.default_organization | default(omit) }}"
+    description: "{{ loop_user.description | default(omit) }}"
+    firstname: "{{ loop_user.firstname | default(omit) }}"
+    lastname: "{{ loop_user.lastname | default(omit) }}"
+    locale: "{{ loop_user.locale | default(omit) }}"
+    locations: "{{ loop_user.locations | default(tp_foreman_configure_default_locations) }}"
+    login: "{{ loop_user.login }}"
+    mail: "{{ loop_user.mail | default(omit) }}"
+    organizations: "{{ loop_user.organizations | default(tp_foreman_configure_default_organizations) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    roles: "{{ loop_user.roles | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    timezone: "{{ loop_user.timezone | default(omit) }}"
+    user_password: "{{ loop_user.user_password | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_users  }}"
+  loop_control:
+    loop_var: loop_user
+    label: "{{ loop_user.login }}"
+  register: tp_foreman_configure_users_async
+  tags:
+    - user
+    - usergroup

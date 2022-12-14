@@ -1,0 +1,95 @@
+---
+# tasks file for tp.foreman
+- name: Install needed python-library
+  package:
+    name:
+      - python3-psycopg2
+      - python-psycopg2
+  become: True
+
+- name: create certificates directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: 1001
+    group: 995
+  become: True
+  loop:
+    - "{{ tp_foreman_ssl_path }}"
+    - "{{ tp_foreman_ssl_path }}/certs"
+
+- name: create private keys directory
+  file:
+    path: "{{ tp_foreman_ssl_path }}/private_keys"
+    state: directory
+    mode: '0700'
+    owner: 1001
+    group: 995
+  become: True
+
+- name: write public certificates
+  copy:
+    dest: "{{ tp_foreman_ssl_path }}/certs/{{ tp_foreman_loop_pubkey.key }}.pem"
+    content: "{{ tp_foreman_loop_pubkey.value.cert }}"
+    mode: '0644'
+    owner: 1001
+    group: 995
+  become: True
+  loop: "{{ tp_foreman_certificates | dict2items }}"
+  loop_control:
+    loop_var: tp_foreman_loop_pubkey
+    label: "{{ tp_foreman_loop_pubkey.key }}"
+  when: tp_foreman_loop_pubkey.value.cert is defined
+
+- name: write private keys
+  copy:
+    dest:  "{{ tp_foreman_ssl_path }}/private_keys/{{ tp_foreman_loop_privkey.key }}.pem"
+    content: "{{ tp_foreman_loop_privkey.value.key }}"
+    mode: '0640'
+    owner: 1001
+    group: 995
+  become: True
+  no_log: true
+  loop: "{{ tp_foreman_certificates | dict2items }}"
+  loop_control:
+    loop_var: tp_foreman_loop_privkey
+    label: "{{ tp_foreman_loop_privkey.key }}"
+  when: tp_foreman_loop_privkey.value.key is defined
+
+- name: Create container networks
+  docker_network:
+    name: "{{ item.name }}"
+  become: True
+  loop: "{{ tp_foreman_container_app_networks }}"
+
+- name: Include local db task
+  include_tasks: create_db_container.yml
+  when: tp_foreman_use_local_db is true
+
+- name: Wait for DB port to be reachable
+  postgresql_ping:
+    db: "{{ tp_foreman_postgres_database_name }}"
+    login_host: "{{ tp_foreman_postgres_host }}"
+    login_user: "{{ tp_foreman_postgres_user }}"
+    login_password: "{{ tp_foreman_postgres_password }}"
+  register: tp_foreman_db_state
+  until: tp_foreman_db_state.is_available
+  retries: 10
+  delay: 5
+
+- name: Query to check if database {{ tp_foreman_postgres_database_name }} needs to be seeded
+  postgresql_query:
+    login_host: "{{ tp_foreman_postgres_host }}"
+    login_user: "{{ tp_foreman_postgres_user }}"
+    login_password: "{{ tp_foreman_postgres_password }}"
+    db: "{{ tp_foreman_postgres_database_name }}"
+    query: SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
+  register: tp_foreman_postgres_description
+
+- name: Create and seed database if necessary
+  include_tasks: create_db.yml
+  when: tp_foreman_postgres_description.rowcount | int == 0
+
+- name: Create app containers
+  include_tasks: containers.yml

@@ -1,0 +1,4 @@
+---
+foreman_environments:
+## A list of dicts, with 'name' being the only key.
+  - name: production

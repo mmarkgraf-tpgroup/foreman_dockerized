@@ -1,0 +1,18 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/puppet_environment_module.html#ansible-collections-theforeman-foreman-puppet-environment-module
+- name: puppet_environment
+  theforeman.foreman.puppet_environment:
+    locations: "{{ loop_puppet_environment.locations | default(tp_foreman_configure_default_locations) }}"
+    name: "{{ loop_puppet_environment.name }}"
+    organizations: "{{ loop_puppet_environment.organizations | default(tp_foreman_configure_default_organizations) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_puppet_environments }}"
+  loop_control:
+    loop_var: loop_puppet_environment
+    label: "{{ loop_puppet_environment.name }}"
+  tags:
+    - puppet_environment

@@ -1,0 +1,50 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.4.0/plugins/resource_info_module.html#ansible-collections-theforeman-foreman-resource-info-module
+# This retrieves info from foreman, but does not configure anything.
+# Useful to register the result and process that.
+- name: Get resource_info for {{ loop_resource_info.resource }}
+  theforeman.foreman.resource_info:
+    full_details: "{{ loop_resource_info.full_details | default('no') }}"
+    organization: "{{ loop_resource_info.organization | default(omit) }}"
+    params: "{{ loop_resource_info.params | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    resource: "{{ loop_resource_info.resource }}"
+    search: "{{ loop_resource_info.search | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+#  no_log: true
+  ignore_errors: true
+  register: tp_foreman_configure_resource_infos_results
+  tags: ['never', 'resource_info', 'write_resource_info']
+
+- name: Skip this on errors
+  block:
+    - name: Print resource_info for {{ loop_resource_info.resource }}
+      debug:
+        msg: "{{ results.resources | to_nice_yaml(indent=2) }}"
+      tags: ['never', 'resource_info']
+
+    - name: Write resource_info to {{ tp_foreman_configure_resource_infos_dir }}/{{ loop_resource_info.resource }}.yml
+      copy:
+        dest: "{{ tp_foreman_configure_resource_infos_dir }}/{{ loop_resource_info.resource }}.yml"
+        content: "{{ results.resources | to_nice_yaml(indent=2) }}"
+      tags: ['never', 'write_resource_info']
+
+    - name: Prefix lines with 2 spaces
+      replace:
+        path: "{{ tp_foreman_configure_resource_infos_dir }}/{{ loop_resource_info.resource }}.yml"
+        regexp: '(.*)'
+        replace: '  \1'
+      tags: ['never', 'write_resource_info']
+
+    - name: Insert title line
+      lineinfile:
+        dest: "{{ tp_foreman_configure_resource_infos_dir }}/{{ loop_resource_info.resource }}.yml"
+        line: "tp_foreman_configure_{{ loop_resource_info.resource }}:"
+        insertbefore: BOF
+      tags: ['never', 'write_resource_info']
+
+  when: not tp_foreman_configure_resource_infos_results.failed | bool
+  tags: ['never', 'resource_info', 'write_resource_info']

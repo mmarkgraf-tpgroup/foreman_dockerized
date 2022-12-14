@@ -1,0 +1,19 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/hardware_model_module.html#ansible-collections-theforeman-foreman-hardware-model-module
+- name: hardware_model
+  theforeman.foreman.hardware_model:
+    hardware_model: "{{ loop_hardware_model.hardware_model | default(omit) }}"
+    info: "{{ loop_hardware_model.info | default(omit) }}"
+    name: "{{ loop_hardware_model.name }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+    vendor_class: "{{ loop_hardware_model.vendor_class | default(omit) }}"
+  loop: "{{ tp_foreman_configure_hardware_models }}"
+  loop_control:
+    loop_var: loop_hardware_model
+    label: "{{ loop_hardware_model.name }}"
+  tags:
+    - hardware_model

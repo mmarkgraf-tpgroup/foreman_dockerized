@@ -1,0 +1,83 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v2.0.1/plugins/host_module.html#ansible-collections-theforeman-foreman-host-module
+
+## Found an interesting bug:
+## As soon as hostgroup is present, host-creation fails -- but only in the first run.
+## Host creation always fails if "owner" is given and "owner" is not in the same organization/location.
+## Workaround:
+## - Create host with minimal info
+## - Run host module again with full info.
+- name: Show settings for {{ loop_host.name }}
+  debug:
+    msg: "{{ loop_host | to_nice_yaml(indent=2) }}"
+  tags:
+    - never
+    - debug
+
+- name: Create host {{ loop_host.name }} with minimal info
+  theforeman.foreman.host:
+    architecture: "{{ loop_host.architecture | mandatory }}"
+    comment: "{{ loop_host.comment | default(omit) }}"
+    domain: "{{ loop_host.domain | default(omit) }}"
+    ip: "{{ loop_host.ip | default(omit) }}"
+    location: "{{ loop_host.location | default(tp_foreman_configure_default_location) }}"
+    mac: "{{ loop_host.mac | mandatory }}"
+    name: "{{ loop_host.name | mandatory }}"
+    operatingsystem: "{{ loop_host.operatingsystem | default(omit) }}"
+    organization: "{{ loop_host.organization | default(tp_foreman_configure_default_organization) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    root_pass: "{{ loop_host.root_pass | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    subnet6: "{{ loop_host.subnet6 | default(omit) }}"
+    subnet: "{{ loop_host.subnet | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ validate_certs | default('yes') }}"
+  ignore_errors: yes
+
+- name: Run host module again with full info.
+  theforeman.foreman.host:
+    architecture: "{{ loop_host.architecture | mandatory }}"
+    build: "{{ loop_host.build | default(omit) }}"
+    comment: "{{ loop_host.comment | default(omit) }}"
+    compute_attributes: "{{ loop_host.compute_attributes | default(omit) }}"
+    compute_profile: "{{ loop_host.compute_profile | default(omit) }}"
+    compute_resource: "{{ loop_host.compute_resource_name | default(omit) }}"
+    config_groups: "{{ loop_host.config_groups | default(omit) }}"
+    content_source: "{{ loop_host.content_source | default(omit) }}"
+    content_view: "{{ loop_host.content_view | default(omit) }}"
+    domain: "{{ loop_host.domain | default(omit) }}"
+    enabled: "{{ loop_host.enabled | default(omit) }}"
+    environment: "{{ loop_host.environment | default(omit) }}"
+    hostgroup: "{{ loop_host.hostgroup | default(omit) }}"
+    image: "{{ loop_host.image | default(omit) }}"
+    ip: "{{ loop_host.ip | default(omit) }}"
+    kickstart_repository: "{{ loop_host.kickstart_repository | default(omit) }}"
+    lifecycle_environment: "{{ loop_host.lifecycle_environment | default(omit) }}"
+    location: "{{ loop_host.location | default(tp_foreman_configure_default_location) }}"
+    mac: "{{ loop_host.mac | mandatory }}"
+    managed: "{{ loop_host.managed | default(omit) }}"
+    medium: "{{ loop_host.medium | default(omit) }}"
+    name: "{{ loop_host.name | mandatory }}"
+    openscap_proxy: "{{ loop_host.openscap_proxy | default(omit) }}"
+    operatingsystem: "{{ loop_host.operatingsystem | default(omit) }}"
+    organization: "{{ loop_host.organization | default('Default Organization') }}"
+    owner: "{{ loop_host.owner | default(omit) }}"
+    owner_group: "{{ loop_host.owner_group | default(omit) }}"
+    parameters: "{{ loop_host.parameters | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    provision_method: "{{ loop_host.provision_method | default(omit) }}"
+    ptable: "{{ loop_host.ptable | default(omit) }}"
+    puppet_ca_proxy: "{{ loop_host.puppet_ca_proxy | default(omit) }}"
+    puppet_proxy: "{{ loop_host.puppet_proxy | default(omit) }}"
+    puppetclasses: "{{ loop_host.puppetclasses | default(omit) }}"
+    pxe_loader: "{{ loop_host.pxe_loader | default(omit) }}"
+    realm: "{{ loop_host.realm | default(omit) }}"
+    root_pass: "{{ loop_host.root_pass | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    subnet6: "{{ loop_host.subnet6 | default(omit) }}"
+    subnet: "{{ loop_host.subnet | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ validate_certs | default('yes') }}"
+  ignore_errors: yes

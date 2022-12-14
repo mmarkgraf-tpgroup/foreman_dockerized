@@ -1,0 +1,18 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/snapshot_module.html#ansible-collections-theforeman-foreman-snapshot-module
+- name: snapshot
+  theforeman.foreman.snapshot:
+    description: "{{ loop_snapshot.description | default(omit) }}"
+    host: "{{ loop_snapshot.host }}"
+    name: "{{ loop_snapshot.name }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_snapshots }}"
+  loop_control:
+    loop_var: loop_snapshot
+    label: "{{ loop_snapshot.name }} [{{ loop_snapshot.host }}]"
+  tags:
+    - snapshot

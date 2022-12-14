@@ -1,0 +1,25 @@
+---
+- name: Create Database
+  docker_container:
+    name: initdb
+    image: "{{ tp_foreman_container_app_image }}:{{ tp_foreman_container_app_version }}"
+    command: bundle exec rake db:create db:migrate
+    env: "{{ tp_foreman_container_app_env }}"
+    networks: "{{ tp_foreman_container_app_networks }}"
+    detach: false
+    cleanup: yes
+  become: True
+  become_user: "{{ tp_foreman_service_user }}"
+
+- name: Seed database and set password
+  docker_container:
+    name: setpass
+    image: "{{ tp_foreman_container_app_image }}:{{ tp_foreman_container_app_version }}"
+    command: "bundle exec rake db:seed permissions:reset password='{{ tp_foreman_password }}'"
+    env: "{{ tp_foreman_container_app_env }}"
+    networks: "{{ tp_foreman_container_app_networks }}"
+    detach: false
+    cleanup: yes
+  become: True
+  become_user: "{{ tp_foreman_service_user }}"
+  no_log: true

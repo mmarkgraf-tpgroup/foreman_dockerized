@@ -1,0 +1,22 @@
+galaxy_info:
+  author: Marco Markgraf
+  description: dockerized Foreman
+  license: BSD 3-Clause License
+
+  min_ansible_version: '2.9'
+
+  platforms:
+    - name: Debian
+      versions:
+        - stretch
+
+  galaxy_tags:
+    - foreman
+
+dependencies: []
+## we have a role for that, but you may want to configure docker your own way...
+#  - role: tp.docker_service
+#    tp_docker_service: "{{ tp_foreman_service_name }}"
+#    tp_docker_service_user_name: "{{ tp_foreman_service_user }}"
+#    tp_docker_service_group_name: "{{ tp_foreman_service_group }}"
+#    tp_docker_service_lv_size: "{{ tp_foreman_service_lv_size }}"

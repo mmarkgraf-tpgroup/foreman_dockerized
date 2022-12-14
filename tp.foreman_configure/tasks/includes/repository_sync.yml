@@ -1,0 +1,18 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/repository_sync_module.html#ansible-collections-theforeman-foreman-repository-sync-module
+- name: repository_sync
+  theforeman.foreman.repository_sync:
+    organization: "{{ loop_repository_sync.organization }}"
+    password: "{{ tp_foreman_configure_password }}"
+    product: "{{ loop_repository_sync.product }}"
+    repository: "{{ loop_repository_sync.repository | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_repository_syncs }}"
+  loop_control:
+    loop_var: loop_repository_sync
+    label: "{{ loop_repository_sync.product }} [{{ loop_repository_sync.name | default('ALL repositories')}}]"
+  tags:
+    - repository_sync

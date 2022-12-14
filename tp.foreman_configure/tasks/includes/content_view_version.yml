@@ -1,0 +1,22 @@
+---
+- name: content_view_version
+  theforeman.foreman.content_view_version:
+    content_view: "{{ loop_content_view_version.content_view }}"
+    current_lifecycle_environment: "{{ loop_content_view_version.current_lifecycle_environment | default(omit) }}"
+    description: "{{ loop_content_view_version.description | default(omit) }}"
+    force_promote: "{{ loop_content_view_version.force_promote | default(omit) }}"
+    force_yum_metadata_regeneration..: "{{ loop_content_view_version. | default(omit) }}"
+    lifecycle_environments: "{{ loop_content_view_version.lifecycle_environments | default(omit) }}"
+    organization: "{{ loop_content_view_version.organization }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+    version: "{{ loop_content_view_version.version | default(omit) }}"
+  loop: "{{ tp_foreman_configure_content_view_versions }}"
+  loop_control:
+    loop_var: loop_content_view_version
+    label: "{{ loop_content_view_version.content_view }} [{{ loop_content_view_version.version }}]"
+  tags:
+    - content_view_version

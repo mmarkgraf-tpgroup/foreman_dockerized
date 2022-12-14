@@ -1,0 +1,51 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/develop/plugins/smart_proxy_module.html
+# this module is not working as expected, use curl or the uri-module until it does...
+# -> available from v1.4.0, which only installs properly with ansible >=2.10
+#- name: smart_proxy
+#  theforeman.foreman.smart_proxy:
+#    name: "{{ loop_smart_proxy.name }}"
+#    url: "{{ loop_smart_proxy.url }}"
+#    locations: "{{ loop_smart_proxy.locations | default(tp_foreman_configure_default_locations) }}"
+#    organizations: "{{ loop_smart_proxy.organizations | default(tp_foreman_configure_default_organizations) }}"
+#    password: "{{ tp_foreman_configure_password }}"
+#    server_url: "{{ tp_foreman_configure_server_url }}"
+#    state: "{{ loop_smart_proxy.state | default(omit) }}"
+#    username: "{{ tp_foreman_configure_user }}"
+#    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+#  loop: "{{ tp_foreman_configure_smart_proxies }}"
+#  loop_control:
+#    loop_var: loop_smart_proxy
+#    label: "{{ loop_smart_proxy.name }}"
+#  tags:
+#    - smart_proxy
+
+- name: Create or update smart_proxy
+  include: smart_proxy_loop.yml
+  loop: "{{ tp_foreman_configure_smart_proxies }}"
+  loop_control:
+    loop_var: loop_smart_proxy
+    label: "{{ loop_smart_proxy.name }}"
+
+#- name: smart_proxy
+#  uri:
+#    url: "{{ tp_foreman_configure_server_url }}/api/smart_proxies"
+#    url_username: "{{ tp_foreman_configure_user }}"
+#    url_password: "{{ tp_foreman_configure_password }}"
+#    force_basic_auth: yes
+#    method: POST
+#    body_format: json
+#    body:
+#     smart_proxy: "{{ loop_smart_proxy }}"
+#    status_code: 201
+#    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+#  ignore_errors: yes
+#  loop: "{{ tp_foreman_configure_smart_proxies }}"
+#  loop_control:
+#    loop_var: loop_smart_proxy
+#    label: "{{ loop_smart_proxy.name }}"
+#  tags:
+#    - smart_proxy
+#    - hostgroup
+#    - host
+#

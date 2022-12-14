@@ -1,0 +1,24 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/lifecycle_environment_module.html#ansible-collections-theforeman-foreman-lifecycle-environment-module
+- name: lifecycle_environment
+  theforeman.foreman.lifecycle_environment:
+    description: "{{ loop_lifecycle_environment.description | default(omit) }}"
+    label: "{{ loop_lifecycle_environment.label | default(omit) }}"
+    name: "{{ loop_lifecycle_environment.name }}"
+    organization: "{{ loop_lifecycle_environment.organization }}"
+    password: "{{ tp_foreman_configure_password }}"
+    prior: "{{ loop_lifecycle_environment.prior | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_lifecycle_environments }}"
+  loop_control:
+    loop_var: loop_lifecycle_environment
+    label: "{{ loop_lifecycle_environment.name }} [{{ loop_lifecycle_environment.organization }}]"
+  tags:
+    - lifecycle_environment
+    - activation_key
+    - content_view_version
+    - host
+    - hostgroup

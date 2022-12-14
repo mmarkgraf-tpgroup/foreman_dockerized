@@ -1,0 +1,25 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/scc_account_module.html#ansible-collections-theforeman-foreman-scc-account-module
+- name: scc_account
+  theforeman.foreman.scc_account:
+    base_url: "{{ loop_scc_account.base_url | default(omit) }}"
+    interval: "{{ loop_scc_account.interval | default(omit) }}"
+    login: "{{ loop_scc_account.login | default(omit) }}"
+    name: "{{ loop_scc_account.name }}"
+    organization: "{{ loop_scc_account.organization }}"
+    password: "{{ tp_foreman_configure_password }}"
+    scc_account_password: "{{ loop_scc_account.scc_account_password | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    sync_date: "{{ loop_scc_account.sync_date | default(omit) }}"
+    test_connection: "{{ loop_scc_account.test_connection | default(omit) }}"
+    updated_name: "{{ loop_scc_account.updated_name | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_scc_accounts }}"
+  loop_control:
+    loop_var: loop_scc_account
+    label: "{{ loop_scc_account.name }} [{{ loop_scc_account.organization }}]"
+  tags:
+    - scc_account
+    - scc_product

@@ -1,0 +1,25 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/image_module.html#ansible-collections-theforeman-foreman-image-module
+- name: image
+  theforeman.foreman.image:
+    architecture: "{{ loop_image.architecture }}"
+    compute_resource: "{{ loop_image.compute_resource }}"
+    image_password: "{{ loop_image.image_password | default(omit) }}"
+    image_username: "{{ loop_image.image_username }}"
+    name: "{{ loop_image.name }}"
+    operatingsystem: "{{ loop_image.operatingsystem }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    user_data: "{{ loop_image.user_data | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    uuid: "{{ loop_image.uuid }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_images }}"
+  loop_control:
+    loop_var: loop_image
+    label: "{{ loop_image.name }} [{{ loop_image.operatingsystem }}]"
+  tags:
+    - image
+    - host
+    - hostgroup

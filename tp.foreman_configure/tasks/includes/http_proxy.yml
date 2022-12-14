@@ -1,0 +1,20 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/http_proxy_module.html#ansible-collections-theforeman-foreman-http-proxy-module
+- name: http_proxy
+  theforeman.foreman.http_proxy:
+    locations: "{{ loop_http_proxy.locations | default(tp_foreman_configure_default_locations) }}"
+    name: "{{ loop_http_proxy.name }}"
+    organizations: "{{ loop_http_proxy.organizations | default(tp_foreman_configure_default_organizations) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    proxy_password: "{{ loop_http_proxy.proxy_password | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    url: "{{ loop_http_proxy.url | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_http_proxys }}"
+  loop_control:
+    loop_var: loop_http_proxy
+    label: "{{ loop_http_proxy.name }}"
+  tags:
+    - http_proxy

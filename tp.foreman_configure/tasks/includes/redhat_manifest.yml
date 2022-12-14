@@ -1,0 +1,26 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/redhat_manifest_module.html#ansible-collections-theforeman-foreman-redhat-manifest-module
+- name: redhat_manifest
+  debug:
+    msg: 'Not yet implemented!'
+    #  theforeman.foreman.redhat_manifest:
+    #    server_url: "{{ tp_foreman_configure_server_url }}"
+    #    username: "{{ tp_foreman_configure_user }}"
+    #    password: "{{ tp_foreman_configure_password }}"
+    #    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+    #    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    #    : "{{ loop_redhat_manifest. }}"
+    #    : "{{ loop_redhat_manifest. }}"
+    #    : "{{ loop_redhat_manifest. }}"
+    #    : "{{ loop_redhat_manifest. }}"
+    #    : "{{ loop_redhat_manifest. }}"
+    #    : "{{ loop_redhat_manifest. | default(omit) }}"
+    #    : "{{ loop_redhat_manifest. | default(omit) }}"
+    #    : "{{ loop_redhat_manifest. | default(omit) }}"
+    #    : "{{ loop_redhat_manifest. | default(omit) }}"
+    #    : "{{ loop_redhat_manifest. | default(omit) }}"
+    #  loop: "{{ tp_foreman_configure_redhat_manifests }}"
+    #  loop_control:
+    #    loop_var: loop_redhat_manifest
+    #  tags:
+    #    - redhat_manifest

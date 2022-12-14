@@ -1,0 +1,96 @@
+---
+- name: Create redis-cache container
+  docker_container:
+    name: "{{ tp_foreman_container_redis_cache_name }}"
+    image: "{{ tp_foreman_container_redis_cache_image }}:{{ tp_foreman_container_redis_cache_version }}"
+    networks: "{{ tp_foreman_container_redis_cache_networks }}"
+    purge_networks: "{{ tp_foreman_container_redis_cache_purge_networks }}"
+    volumes: "{{ tp_foreman_container_redis_cache_volumes }}"
+    restart_policy: always
+  become: True
+  become_user: "{{ tp_foreman_service_user }}"
+
+- name: Create redis-tasks container
+  docker_container:
+    command: "{{ tp_foreman_container_redis_task_command }}"
+    name: "{{ tp_foreman_container_redis_task_name }}"
+    image: "{{ tp_foreman_container_redis_task_image }}:{{ tp_foreman_container_redis_task_version }}"
+    networks: "{{ tp_foreman_container_redis_task_networks }}"
+    purge_networks: "{{ tp_foreman_container_redis_task_purge_networks }}"
+    volumes: "{{ tp_foreman_container_redis_task_volumes }}"
+    restart_policy: always
+  become: True
+  become_user: "{{ tp_foreman_service_user }}"
+
+- name: Create app container
+  docker_container:
+    name: "{{ tp_foreman_container_app_name }}"
+    image: "{{ tp_foreman_container_app_image }}:{{ tp_foreman_container_app_version }}"
+    command: "{{ tp_foreman_container_app_command }}"
+    env: "{{ tp_foreman_container_app_env }}"
+    ports: "{{ tp_foreman_container_app_ports }}"
+    networks: "{{ tp_foreman_container_app_networks }}"
+    purge_networks: "{{ tp_foreman_container_app_purge_networks }}"
+    volumes: "{{ tp_foreman_container_app_volumes }}"
+    restart_policy: always
+  become: True
+  become_user: "{{ tp_foreman_service_user }}"
+
+# this will fail if app has already been running for some time.  Need a better check.
+# Wait for port 8080 maybe?
+# - name: Wait for app to be ready (up to 120 seconds)
+#   shell: "docker logs --tail=10 {{ tp_foreman_container_app_name }}"
+#   register: tp_foreman_app_ready
+#   until: tp_foreman_app_ready is search('Use Ctrl-C to stop')
+#   retries: 12
+#   delay: 10
+#   become: True
+- name: Wait for app to be ready
+  wait_for:
+    port: "{{ tp_foreman_port }}"
+    host: "{{ tp_foreman_server }}"
+    connect_timeout: 10
+    delay: 10
+    timeout: 120
+
+- name: Create orchestrator
+  docker_container:
+    name: "{{ tp_foreman_container_orchestrator_name }}"
+    image: "{{ tp_foreman_container_orchestrator_image }}:{{ tp_foreman_container_orchestrator_version }}"
+    command: "{{ tp_foreman_container_orchestrator_command }}"
+    env: "{{ tp_foreman_container_orchestrator_env }}"
+    networks: "{{ tp_foreman_container_orchestrator_networks }}"
+    purge_networks: "{{ tp_foreman_container_orchestrator_purge_networks }}"
+    exposed_ports: "{{ tp_foreman_container_app_ports }}"
+    restart_policy: always
+  become: True
+  become_user: "{{ tp_foreman_service_user }}"
+
+- name: Wait for orchestrator to be ready (up to 120 seconds)
+  shell: "docker logs --tail=10 {{ tp_foreman_container_orchestrator_name }}"
+  register: tp_foreman_orchestrator_ready
+  until: (tp_foreman_orchestrator_ready is search('Everything ready for world')) or (tp_foreman_orchestrator_ready is search('hit Ctrl-C to stop'))
+  retries: 12
+  delay: 10
+  become: True
+
+- name: Create worker
+  docker_container:
+    name: "{{ tp_foreman_container_worker_name }}"
+    image: "{{ tp_foreman_container_worker_image }}:{{ tp_foreman_container_worker_version }}"
+    command: "{{ tp_foreman_container_worker_command }}"
+    env: "{{ tp_foreman_container_worker_env }}"
+    networks: "{{ tp_foreman_container_worker_networks }}"
+    purge_networks: "{{ tp_foreman_container_worker_purge_networks }}"
+    exposed_ports: "{{ tp_foreman_container_app_ports }}"
+    restart_policy: always
+  become: True
+  become_user: "{{ tp_foreman_service_user }}"
+
+- name: Wait for worker to be ready (up to 180 seconds)
+  shell: "docker logs {{ tp_foreman_container_worker_name }}"
+  register: tp_foreman_worker_ready
+  until: tp_foreman_worker_ready is search('Everything ready for world')
+  retries: 18
+  delay: 10
+  become: True

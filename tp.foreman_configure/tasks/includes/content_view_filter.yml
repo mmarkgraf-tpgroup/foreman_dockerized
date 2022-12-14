@@ -1,0 +1,34 @@
+---
+- name: content_view_filter
+  theforeman.foreman.content_view_filter:
+    architecture: "{{ loop_content_view_filter.architecture | default(omit) }}"
+    content_view: "{{ loop_content_view_filter.content_view }}"
+    date_type: "{{ loop_content_view_filter.date_type | default(omit) }}"
+    description: "{{ loop_content_view_filter.description | default(omit) }}"
+    end_date: "{{ loop_content_view_filter.end_date | default(omit) }}"
+    errata_id: "{{ loop_content_view_filter.errata_id | default(omit) }}"
+    filter_state: "{{ loop_content_view_filter.filter_state | default(omit) }}"
+    filter_type: "{{ loop_content_view_filter.filter_type }}"
+    inclusion: "{{ loop_content_view_filter.inclusion | default(omit) }}"
+    max_version: "{{ loop_content_view_filter.max_version | default(omit) }}"
+    min_version: "{{ loop_content_view_filter.min_version | default(omit) }}"
+    name: "{{ loop_content_view_filter.name }}"
+    organization: "{{ loop_content_view_filter.organization }}"
+    original_packages: "{{ loop_content_view_filter.original_packages | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    repositories: "{{ loop_content_view_filter.repositories | default(omit) }}"
+    rule_name: "{{ loop_content_view_filter.rule_name | default(omit) }}"
+    rule_state: "{{ loop_content_view_filter.rule_state | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    start_date: "{{ loop_content_view_filter.start_date | default(omit) }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    types: "{{ loop_content_view_filter.types | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+    version: "{{ loop_content_view_filter.version | default(omit) }}"
+  loop: "{{ tp_foreman_configure_content_view_filters }}"
+  loop_control:
+    loop_var: loop_content_view_filter
+    label: "{{ loop_content_view_filter.name }} [{{ loop_content_view_filter.content_view }}]"
+  tags:
+    - content_view_filter

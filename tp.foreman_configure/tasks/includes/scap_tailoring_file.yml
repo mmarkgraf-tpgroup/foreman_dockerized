@@ -1,0 +1,21 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/scap_tailoring_file_module.html#ansible-collections-theforeman-foreman-scap-tailoring-file-module
+- name: scap_tailoring_file
+  theforeman.foreman.scap_tailoring_file:
+    locations: "{{ loop_scap_tailoring_file.locations | default(tp_foreman_configure_default_locations) }}"
+    name: "{{ loop_scap_tailoring_file.name }}"
+    organizations: "{{ loop_scap_tailoring_file.organizations | default(tp_foreman_configure_default_organizations) }}"
+    original_filename: "{{ loop_scap_tailoring_file.original_filename | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    scap_file: "{{ loop_scap_tailoring_file.scap_file | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    updated_name: "{{ loop_scap_tailoring_file.updated_name | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_scap_tailoring_files }}"
+  loop_control:
+    loop_var: loop_scap_tailoring_file
+    label: "{{ loop_scap_tailoring_file.name }}"
+  tags:
+    - scap_tailoring_file

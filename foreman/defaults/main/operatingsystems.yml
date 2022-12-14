@@ -1,0 +1,13 @@
+---
+foreman_operatingsystems: []
+#  - name: Debian
+#    description: Debian 10.4
+#    os_family: Debian
+#    major: 10
+#    minor: 4
+#    release_name: buster
+#    password_hash: SHA256
+#    architectures:
+#      - x86_64
+#    ptables:
+#      - Preseed custom LVM

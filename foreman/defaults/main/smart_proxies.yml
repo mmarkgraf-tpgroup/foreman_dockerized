@@ -1,0 +1,4 @@
+---
+foreman_smart_proxies: []
+#  - name: foreman-proxy
+#    url: https://foreman-proxy.some.where:8443

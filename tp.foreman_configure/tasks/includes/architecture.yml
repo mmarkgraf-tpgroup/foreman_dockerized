@@ -1,0 +1,43 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/architecture_module.html#ansible-collections-theforeman-foreman-architecture-module
+
+# Todo:
+# Should "updated_name" default to loop_architecture.name?
+- name: architecture
+  theforeman.foreman.architecture:
+    name: "{{ loop_architecture.name }}"
+#    operatingsystems: "{{ loop_architecture.operatingsystems | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    updated_name: "{{ loop_architecture.updated_name | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_architectures }}"
+  loop_control:
+    loop_var: loop_architecture
+    label: "{{ loop_architecture.name }}"
+  tags:
+    - architecture
+    - host
+
+- name: architecture | Create empty list
+  set_fact:
+    tp_foreman_configure_unwanted_items: []
+
+- name: architecture | Register unwanted items
+  set_fact:
+    tp_foreman_configure_unwanted_items: "{{ tp_foreman_configure_unwanted_items + [loop_architecture.name] }}"
+  when: loop_architecture.operatingsystems is defined
+  loop: "{{ tp_foreman_configure_architectures }}"
+  loop_control:
+    loop_var: loop_architecture
+    label: "{{ loop_architecture.name }}"
+
+- name: architecture | Notify if unwanted items were found
+  debug:
+    msg: |
+      "Please DO NOT set 'operatingsystems' here.  It will be ignored.
+      Set 'architectures' in 'operatingsystems' instead.
+      Found unwanted items in: {{ tp_foreman_configure_unwanted_items }}"
+  when: tp_foreman_configure_unwanted_items | length > 0

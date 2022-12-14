@@ -1,0 +1,24 @@
+---
+# theforeman.github.io/foreman-ansible-modules/v1.4.0/plugins/partition_table_module.html
+- name: partition_table
+  theforeman.foreman.partition_table:
+    file_name: "{{ loop_partition_table.file_name | default(omit) }}"
+    layout: "{{ loop_partition_table.layout | default(omit) }}"
+    locations: "{{ loop_partition_table.locations | default(tp_foreman_configure_default_locations) }}"
+    locked: "{{ loop_partition_table.locked | default(omit) }}"
+    name: "{{ loop_partition_table.name | default(omit) }}"
+    organizations: "{{ loop_partition_table.organizations | default(tp_foreman_configure_default_organizations) }}"
+    os_family: "{{ loop_partition_table.os_family | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    updated_name: "{{ loop_partition_table.updated_name | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_partition_tables }}"
+  loop_control:
+    loop_var: loop_partition_table
+    label: "{{ loop_partition_table.name }}"
+  tags:
+    - partition_table
+    - host

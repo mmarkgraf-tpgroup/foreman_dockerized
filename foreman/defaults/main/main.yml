@@ -1,0 +1,22 @@
+---
+# Each and every foreman-ansible-module needs these:
+foreman_user: admin
+foreman_password: TopSecret
+foreman_port: 8080
+foreman_server: localhost
+foreman_server_url: "http://{{ foreman_server }}:{{ foreman_port }}"
+
+# Some modules need a single organization/location, others need a list.
+# Note the difference to foreman_locations and foreman_organizations.
+# Those are definitions.  This is a mapping.
+foreman_default_organization: YourOrganization
+foreman_default_location: YourLocation
+foreman_default_organizations:
+  - YourOrganization
+foreman_default_locations:
+  - YourLocation
+
+# Adjacent files contain empty defaults and examples.
+# You do not want to write those resources manually.
+# Click them in the Frontend, then get them via api-call, format as yaml
+# and write to a (number of) files in your group_vars.

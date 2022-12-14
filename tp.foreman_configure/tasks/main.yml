@@ -1,0 +1,122 @@
+---
+# tasks file for foreman configuration
+- name: Install dependencies for the foreman-ansible-modules [pip-packages]
+  pip:
+    name: "{{ tp_foreman_configure_pip_packages }}"
+    extra_args: --ignore-installed
+  loop:
+    - apypie
+    - PyYAML
+  loop_control:
+    loop_var: tp_foreman_configure_pip_packages
+  tags:
+    - always
+
+- name: Cleanup default Organization
+  theforeman.foreman.organization:
+    name: Default Organization
+    state: absent
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    username: "{{ tp_foreman_configure_user }}"
+    password: "{{ tp_foreman_configure_password }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  tags:
+    - always
+    - organization
+    - cleanup_defaults
+  when: tp_foreman_configure_remove_defaults | bool
+
+- name: Cleanup default location
+  theforeman.foreman.location:
+    name: Default Location
+    state: absent
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    username: "{{ tp_foreman_configure_user }}"
+    password: "{{ tp_foreman_configure_password }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  tags:
+    - always
+    - location
+    - cleanup_defaults
+  when: tp_foreman_configure_remove_defaults | bool
+
+# ! See explanation in README.md.  Topological order is of vital importance!
+- name: Include tasks in topological order
+  include_tasks: "{{ role_path }}/tasks/includes/{{ item }}.yml"
+  loop: "{{ tp_foreman_configure_modules_in_topological_order }}"
+  tags:
+    - activation_key
+    - architecture
+    - auth_source_ldap
+    - bookmark
+    - compute_attribute
+    - compute_profile
+    - compute_resource
+    - config_group
+    - content_credential
+    - content_upload
+    - content_view
+    - content_view_filter
+    - content_view_version
+    - domain
+    - external_usergroup
+    - global_parameter
+    - hardware_model
+    - host
+    - host_collection
+    - host_power
+    - hostgroup
+    - http_proxy
+    - image
+    - installation_medium
+    - job_template
+    - lifecycle_environment
+    - location
+    - operatingsystem
+    - organization
+    - os_default_template
+    - partition_table
+    - product
+    - provisioning_template
+    - puppet_environment
+    - realm
+    - redhat_manifest
+    - repository
+    - repository_set
+    - repository_sync
+    - resource_info
+    - role
+    - scap_content
+    - scap_tailoring_file
+    - scc_account
+    - scc_product
+    - setting
+    - smart_proxy
+    - snapshot
+    - subnet
+    - subscription_manifest
+    - sync_plan
+    - templates_import
+    - user
+    - usergroup
+
+# This can be used to fetch the config of an existing server.
+# will only be executed if you pass tag 'resource_info' or 'write_resource_info'
+- name: Create temporary dir for resource info
+  tempfile:
+    state: directory
+    suffix: resource_infos
+  register: tp_foreman_configure_resource_infos_dir
+  tags: ['never', 'write_resource_info']
+
+- name: Fetch configuration from {{ tp_foreman_configure_server_url }}
+  include_tasks: "{{ role_path }}/tasks/includes/resource_infos.yml"
+  loop: "{{ tp_foreman_configure_resource_infos }}"
+  loop_control:
+    loop_var: loop_resource_info
+  tags: ['never', 'resource_info', 'write_resource_info']
+
+- name: Show resource info directory
+  debug:
+    msg: "Resource info was written to {{ tp_foreman_configure_resource_infos_dir }}"
+  tags: ['never', 'write_resource_info']

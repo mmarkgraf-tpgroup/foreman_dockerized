@@ -1,0 +1,19 @@
+---
+# foreman_settings currently (as of v1.3.0) only supports
+# - name: a settings name
+#   value: a settings value
+# other values will be ignored. Keeping them for reference.
+foreman_settings: []
+#  - name: login_delegation_logout_url
+#    value:
+#    description: Redirect your users to this url on logout (authorize_login_delegation should also be enabled)
+#    category: Setting::Auth
+#    category_name: Authentication
+#
+#  - name: restrict_registered_smart_proxies
+#    value: True
+#    description: Only known Smart Proxies may access features that use Smart Proxy authentication
+#    category: Setting::Auth
+#    category_name: Authentication
+#
+# [...]

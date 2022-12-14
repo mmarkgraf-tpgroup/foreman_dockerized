@@ -1,0 +1,23 @@
+---
+- name: Verify
+  hosts: all
+
+  vars:
+    check_me_list: []
+
+  tasks:
+    - name: Fetch configuration from {{ tp_foreman_configure_server_url }}
+      include_tasks: "{{ role_path }}/tasks/includes/resource_infos.yml"
+      apply:
+        tags: ['resource_info']
+      loop: "{{ tp_foreman_configure_resource_infos }}"
+      loop_control:
+        loop_var: loop_resource_info
+      register: tp_foreman_configure_verify
+
+    - name: verify if it's what's expected
+      assert:
+        that: (check_me | lower) is in (tp_foreman_configure_verify | lower)
+      loop: "{{ check_me_list }}"
+      loop_control:
+        loop_var: check_me

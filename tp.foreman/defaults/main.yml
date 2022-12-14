@@ -1,0 +1,117 @@
+---
+# defaults file for tp.foreman
+tp_foreman_service_name: foreman
+tp_foreman_service_user: "{{ tp_foreman_service_name }}"
+tp_foreman_service_group: "{{ tp_foreman_service_user }}"
+tp_foreman_service_lv_size: 10G
+tp_foreman_server: localhost
+tp_foreman_port: 8080
+tp_foreman_server_url: "http://{{tp_foreman_server }}:{{ tp_foreman_port }}"
+
+tp_foreman_password: foreman
+
+tp_foreman_certificates: {}
+tp_foreman_ssl_path: "/srv/{{ tp_foreman_service_name }}/ssl"
+
+# Container config
+# ==============================================================================
+# Redis Cache
+tp_foreman_container_redis_cache_name: redis-cache
+tp_foreman_container_redis_cache_image: redis
+tp_foreman_container_redis_cache_version: latest
+tp_foreman_container_redis_cache_networks:
+  - name: redis_network
+tp_foreman_container_redis_cache_purge_networks: yes
+tp_foreman_container_redis_cache_volumes:
+  - /etc/timezone:/etc/timezone:ro
+  - /etc/localtime:/etc/localtime:ro
+
+# Redis Task
+tp_foreman_container_redis_task_name: redis-tasks
+tp_foreman_container_redis_task_image: redis
+tp_foreman_container_redis_task_version: latest
+tp_foreman_container_redis_task_command: redis-server --appendonly yes
+tp_foreman_container_redis_task_networks:
+  - name: redis_network
+tp_foreman_container_redis_task_purge_networks: yes
+tp_foreman_container_redis_task_volumes:
+  - /etc/timezone:/etc/timezone:ro
+  - /etc/localtime:/etc/localtime:ro
+  - "/srv/{{ tp_foreman_service_name }}/redis:/data"  # redis-persistent:/data
+
+# Foreman
+tp_foreman_container_app_name: app
+tp_foreman_container_app_image: pitops/foreman
+tp_foreman_container_app_version: "{{ stage | default('latest') }}"
+tp_foreman_container_app_command: "bundle exec bin/rails server -b 0.0.0.0 -p {{ tp_foreman_port }}"
+tp_foreman_container_app_env:
+  DATABASE_URL: "{{ tp_foreman_db_url }}"
+  RAILS_MAX_THREADS: '5'
+  RAILS_ENV: production
+  FOREMAN_FQDN: "{{ tp_foreman_service_name }}.{{ ansible_domain }}"
+  FOREMAN_DOMAIN: "{{ ansible_domain }}"
+  FOREMAN_RAILS_CACHE_STORE_TYPE: redis
+  FOREMAN_RAILS_CACHE_STORE_URLS: "redis://{{ tp_foreman_container_redis_cache_name }}:6379/0"
+  DYNFLOW_REDIS_URL: "redis://{{ tp_foreman_container_redis_task_name }}:6379/0"
+  REDIS_PROVIDER: DYNFLOW_REDIS_URL
+tp_foreman_container_app_ports:
+  - "{{ tp_foreman_port }}:{{ tp_foreman_port }}"
+  - 5910-5930:5910-5930
+tp_foreman_container_app_networks:
+  - name: db_network
+  - name: redis_network
+tp_foreman_container_app_purge_networks: yes
+tp_foreman_container_app_volumes:
+  - /etc/timezone:/etc/timezone:ro
+  - /etc/localtime:/etc/localtime:ro
+  - /usr/local/share/ca-certificates:/usr/local/share/ca-certificates:ro
+  - "{{ tp_foreman_ssl_path }}:/etc/puppetlabs/puppet/ssl:ro"
+
+# Orchestrator
+tp_foreman_container_orchestrator_name: orchestrator
+tp_foreman_container_orchestrator_image: "{{ tp_foreman_container_app_image }}"
+tp_foreman_container_orchestrator_version: "{{ tp_foreman_container_app_version }}"
+tp_foreman_container_orchestrator_command: bundle exec sidekiq -r ./extras/dynflow-sidekiq.rb -c 1 -q dynflow_orchestrator
+tp_foreman_container_orchestrator_env: "{{ tp_foreman_container_app_env }}"
+tp_foreman_container_orchestrator_networks: "{{ tp_foreman_container_app_networks }}"
+tp_foreman_container_orchestrator_purge_networks: "{{ tp_foreman_container_app_purge_networks }}"
+
+# Worker
+tp_foreman_container_worker_name: worker
+tp_foreman_container_worker_image: "{{ tp_foreman_container_app_image }}"
+tp_foreman_container_worker_version: "{{ tp_foreman_container_app_version }}"
+tp_foreman_container_worker_command: bundle exec sidekiq -r ./extras/dynflow-sidekiq.rb -c 15 -q default,remote_execution
+tp_foreman_container_worker_env: "{{ tp_foreman_container_app_env }}"
+tp_foreman_container_worker_networks: "{{ tp_foreman_container_app_networks }}"
+tp_foreman_container_worker_purge_networks: "{{ tp_foreman_container_app_purge_networks }}"
+
+# DB
+tp_foreman_container_db_name: db
+tp_foreman_container_db_image: postgres
+tp_foreman_container_db_version: 10
+tp_foreman_container_db_env:
+  POSTGRES_USER: "{{ tp_foreman_postgres_user }}"
+  POSTGRES_PASSWORD: "{{ tp_foreman_postgres_password }}"
+  POSTGRES_DATABASE: "{{ tp_foreman_postgres_database_name }}"
+  PGDATA: /var/lib/postgresql/data/pgdata
+tp_foreman_container_db_networks:
+  - name: db_network
+tp_foreman_container_db_ports:
+  - 5432:5432
+tp_foreman_container_db_purge_networks: yes
+tp_foreman_container_db_volumes:
+  - /etc/timezone:/etc/timezone:ro
+  - /etc/localtime:/etc/localtime:ro
+  - /usr/local/share/ca-certificates:/usr/local/share/ca-certificates:ro
+  - "database:/var/lib/postgresql/data"
+
+tp_foreman_use_local_db: true
+tp_foreman_db_url: >
+  postgres://{{ tp_foreman_postgres_user }}:{{ tp_foreman_postgres_password }}
+  @{{ tp_foreman_use_local_db | ternary(tp_foreman_container_db_name, tp_foreman_postgres_host) }}
+  /{{ tp_foreman_postgres_database_name }}?pool={{ tp_foreman_postgres_pool_size }}
+tp_foreman_postgres_host: localhost
+tp_foreman_postgres_user: foreman
+tp_foreman_postgres_password: foreman
+tp_foreman_postgres_database_name: foreman
+tp_foreman_postgres_pool_size: 5

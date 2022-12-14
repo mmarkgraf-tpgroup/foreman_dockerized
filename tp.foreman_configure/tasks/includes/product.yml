@@ -1,0 +1,30 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/product_module.html#ansible-collections-theforeman-foreman-product-module
+- name: product
+  theforeman.foreman.product:
+    description: "{{ loop_product.description | default(omit) }}"
+    gpg_key: "{{ loop_product.gpg_key | default(omit) }}"
+    label: "{{ loop_product.label | default(omit) }}"
+    name: "{{ loop_product.name }}"
+    organization: "{{ loop_product.organization }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    ssl_ca_cert: "{{ loop_product.ssl_ca_cert | default(omit) }}"
+    ssl_client_cert: "{{ loop_product.ssl_client_cert | default(omit) }}"
+    ssl_client_key: "{{ loop_product.ssl_client_key | default(omit) }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    sync_plan: "{{ loop_product.sync_plan | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_products }}"
+  loop_control:
+    loop_var: loop_product
+    label: "{{ loop_product.name }}"
+  tags:
+    - product
+    - content_upload
+    - content_view
+    - repository
+    - repository_sync
+    - scc_product
+    - sync_plan

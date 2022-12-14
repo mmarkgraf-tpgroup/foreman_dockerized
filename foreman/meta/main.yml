@@ -1,0 +1,92 @@
+galaxy_info:
+  author: Marco Markgraf <marco.markgraf@transporeon.com>
+  description: This role holds foreman configuration specific to transporeon.
+  company: https://transporeon.com/
+  license: BSD 3-Clause License
+
+  min_ansible_version: '2.9'
+
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+
+  galaxy_tags:
+      - foreman
+
+dependencies:
+  # install dockerized foreman
+  - role: tp.foreman
+    tp_foreman_password: "{{ foreman_password }}"
+    tp_foreman_certificates: "{{ foreman_certificates }}"
+  - role: tp.foreman_configure
+    # must have:
+    tp_foreman_configure_published_ports: "{{ foreman_published_ports }}"
+    tp_foreman_configure_password: "{{ foreman_password }}"
+    tp_foreman_configure_root_password: "{{ foreman_password }}"
+    tp_foreman_configure_user: "{{ foreman_user }}"
+    tp_foreman_configure_server: "{{ foreman_server }}"
+    tp_foreman_configure_port: "{{ foreman_port }}"
+    tp_foreman_configure_server_url: "{{ foreman_server_url }}"
+    # some defaults.  Note the differences to  foreman_locations and foreman_organizations!
+    tp_foreman_configure_default_organization: "{{ foreman_default_organization }}"
+    tp_foreman_configure_default_organizations: "{{ foreman_default_organizations }}"
+    tp_foreman_configure_default_location: "{{ foreman_default_location }}"
+    tp_foreman_configure_default_locations: "{{ foreman_default_locations }}"
+    # configuration-items:
+    # pass on what we have in defaults/main/*.yml or an empty list if there is nothing.
+    tp_foreman_configure_activation_keys: "{{ foreman_activation_keys | default([]) }}"
+    tp_foreman_configure_architectures: "{{ foreman_architectures | default([]) }}"
+    tp_foreman_configure_auth_source_ldaps: "{{ foreman_auth_source_ldaps | default([]) }}"
+    tp_foreman_configure_bookmarks: "{{ foreman_bookmarks | default([]) }}"
+    tp_foreman_configure_compute_attributes: "{{ foreman_compute_attributes | default([]) }}"
+    tp_foreman_configure_compute_profiles: "{{ foreman_compute_profiles | default([]) }}"
+    tp_foreman_configure_compute_resources: "{{ foreman_compute_resources | default([]) }}"
+    tp_foreman_configure_config_groups: "{{ foreman_config_groups | default([]) }}"
+    tp_foreman_configure_content_credentials: "{{ foreman_content_credentials | default([]) }}"
+    tp_foreman_configure_content_uploads: "{{ foreman_content_uploads | default([]) }}"
+    tp_foreman_configure_content_views: "{{ foreman_content_views | default([]) }}"
+    tp_foreman_configure_content_view_filters: "{{ foreman_content_view_filters | default([]) }}"
+    tp_foreman_configure_content_view_versions: "{{ foreman_content_view_versions | default([]) }}"
+    tp_foreman_configure_domains: "{{ foreman_domains | default([]) }}"
+    tp_foreman_configure_external_usergroups: "{{ foreman_external_usergroups | default([]) }}"
+    tp_foreman_configure_global_parameters: "{{ foreman_global_parameters | default([]) }}"
+    tp_foreman_configure_hardware_models: "{{ foreman_hardware_models | default([]) }}"
+    tp_foreman_configure_hosts: "{{ foreman_hosts | default([]) }}"
+    tp_foreman_configure_host_collections: "{{ foreman_host_collections | default([]) }}"
+    tp_foreman_configure_host_powers: "{{ foreman_host_powers | default([]) }}"
+    tp_foreman_configure_hostgroups: "{{ foreman_hostgroups | default([]) }}"
+    tp_foreman_configure_http_proxys: "{{ foreman_http_proxys | default([]) }}"
+    tp_foreman_configure_images: "{{ foreman_images | default([]) }}"
+    tp_foreman_configure_installation_media: "{{ foreman_installation_media | default([]) }}"
+    tp_foreman_configure_job_templates: "{{ foreman_job_templates | default([]) }}"
+    tp_foreman_configure_lifecycle_environments: "{{ foreman_lifecycle_environments | default([]) }}"
+    tp_foreman_configure_locations: "{{ foreman_locations | default([]) }}"
+    tp_foreman_configure_operatingsystems: "{{ foreman_operatingsystems | default([]) }}"
+    tp_foreman_configure_organizations: "{{ foreman_organizations | default([]) }}"
+    tp_foreman_configure_os_default_templates: "{{ foreman_os_default_templates | default([]) }}"
+    tp_foreman_configure_partition_tables: "{{ foreman_partition_tables | default([]) }}"
+    tp_foreman_configure_products: "{{ foreman_products | default([]) }}"
+    tp_foreman_configure_provisioning_templates: "{{ foreman_provisioning_templates | default([]) }}"
+    tp_foreman_configure_puppet_environments: "{{ foreman_puppet_environments | default([]) }}"
+    tp_foreman_configure_realms: "{{ foreman_realms | default([]) }}"
+    tp_foreman_configure_redhat_manifests: "{{ foreman_redhat_manifests | default([]) }}"
+    tp_foreman_configure_repositorys: "{{ foreman_repositorys | default([]) }}"
+    tp_foreman_configure_repository_sets: "{{ foreman_repository_sets | default([]) }}"
+    tp_foreman_configure_repository_syncs: "{{ foreman_repository_syncs | default([]) }}"
+    tp_foreman_configure_resource_infos: "{{ foreman_resource_infos | default([]) }}"
+    tp_foreman_configure_roles: "{{ foreman_roles | default([]) }}"
+    tp_foreman_configure_scap_contents: "{{ foreman_scap_contents | default([]) }}"
+    tp_foreman_configure_scap_tailoring_files: "{{ foreman_scap_tailoring_files | default([]) }}"
+    tp_foreman_configure_scc_accounts: "{{ foreman_scc_accounts | default([]) }}"
+    tp_foreman_configure_scc_products: "{{ foreman_scc_products | default([]) }}"
+    tp_foreman_configure_settings: "{{ foreman_settings | default([]) }}"
+    tp_foreman_configure_smart_class_parameters: "{{ foreman_smart_class_parameters | default([]) }}"
+    tp_foreman_configure_smart_proxies: "{{ foreman_smart_proxies | default([]) }}"
+    tp_foreman_configure_snapshots: "{{ foreman_snapshots | default([]) }}"
+    tp_foreman_configure_subnets: "{{ foreman_subnets | default([]) }}"
+    tp_foreman_configure_subscription_manifests: "{{ foreman_subscription_manifests | default([]) }}"
+    tp_foreman_configure_sync_plans: "{{ foreman_sync_plans | default([]) }}"
+    tp_foreman_configure_templates_imports: "{{ foreman_templates_imports | default([]) }}"
+    tp_foreman_configure_users: "{{ foreman_users | default([]) }}"
+    tp_foreman_configure_usergroups: "{{ foreman_usergroups | default([]) }}"

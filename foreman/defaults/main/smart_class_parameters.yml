@@ -1,0 +1,31 @@
+---
+#  - puppetclass_name: "prometheus::server"
+#    parameter: alertmanagers_config
+#    override: true
+#    override_value_order:
+#      - fqdn
+#      - hostgroup
+#      - domain
+#    required: true
+#    default_value: /etc/prometheus/alert.yml
+#    override_values:
+#      - match: domain=example.com
+#        value: foo
+#      - match: domain=foo.example.com
+#        omit: true
+#    state: present
+#
+##* merge_default or merge_overrides can be used only with array or hash parameter_type *##
+#  - puppetclass_name: apache::mod::pagespeed
+#    description:
+#    avoid_duplicates: False
+#    hidden_value: no
+#    merge_default: False
+#    merge_overides: False
+#    override: False
+#    override_value_order: ['fqdn', 'hostgroup', 'os', 'domain']
+#    parameter: additional_configuration
+#    parameter_type: hash
+#    required: False
+
+foreman_smart_class_parameters: []

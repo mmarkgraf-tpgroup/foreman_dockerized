@@ -1,0 +1,24 @@
+---
+- name: Converge
+  hosts: all
+
+  vars:
+    ansible_domain: example.com
+    stage: development
+    tp_foreman_published_ports:
+      - 0.0.0.0:8080:3000
+
+  tasks:
+    - name: Install gpg
+      package:
+        name: gpg
+      become: True
+
+    ## this installs certs from our local CA.  You  may want to do something similar.
+    # - name: Include tp.trust_certs
+    #   include_role:
+    #     name: tp.trust_certs
+
+    - name: Include tp.foreman
+      include_role:
+        name: tp.foreman

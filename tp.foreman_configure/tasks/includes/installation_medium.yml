@@ -1,0 +1,22 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/installation_medium_module.html#ansible-collections-theforeman-foreman-installation-medium-module
+- name: installation_medium
+  theforeman.foreman.installation_medium:
+    locations: "{{ loop_installation_medium.locations | default(tp_foreman_configure_default_locations) }}"
+    name: "{{ loop_installation_medium.name }}"
+    operatingsystems: "{{ loop_installation_medium.operatingsystems | mandatory }}"
+    organizations: "{{ loop_installation_medium.organizations | default(tp_foreman_configure_default_organizations) }}"
+    os_family: "{{ loop_installation_medium.os_family | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    path: "{{ loop_installation_medium.path | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    updated_name: "{{ loop_installation_medium.updated_name | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_installation_media }}"
+  loop_control:
+    loop_var: loop_installation_medium
+    label: "{{ loop_installation_medium.name }}"
+  tags:
+    - installation_medium

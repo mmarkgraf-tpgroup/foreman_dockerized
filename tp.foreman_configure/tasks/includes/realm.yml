@@ -1,0 +1,22 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/realm_module.html#ansible-collections-theforeman-foreman-realm-module
+- name: realm
+  theforeman.foreman.realm:
+    locations: "{{ loop_realm.locations | default(tp_foreman_configure_default_locations) }}"
+    name: "{{ loop_realm.name }}"
+    organizations: "{{ loop_realm.organizations | default(tp_foreman_configure_default_organizations) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    realm_proxy: "{{ loop_realm.real_proxy }}"
+    realm_type: "{{ loop_realm.realm_type }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_realms }}"
+  loop_control:
+    loop_var: loop_realm
+    label: "{{ loop_realm.name }} [{{ loop_realm.realm_type }}]"
+  tags:
+    - realm
+    - host
+    - hostgroup

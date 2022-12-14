@@ -1,0 +1,29 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/templates_import_module.html#ansible-collections-theforeman-foreman-templates-import-module
+- name: templates_import
+  theforeman.foreman.templates_import:
+    associate: "{{ loop_templates_import.associate | default(omit) }}"
+    branch: "{{ loop_templates_import.branch | default(omit) }}"
+    dirname: "{{ loop_templates_import.dirname | default(omit) }}"
+    filter: "{{ loop_templates_import.filter | default(omit) }}"
+    force: "{{ loop_templates_import.force | default(omit) }}"
+    locations: "{{ loop_templates_import.locations | default(tp_foreman_configure_default_locations) }}"
+    lock: "{{ loop_templates_import.lock | default(omit) }}"
+    negate: "{{ loop_templates_import.negate | default(omit) }}"
+    organizations: "{{ loop_templates_import.organizations | default(tp_foreman_configure_default_organizations) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    prefix: "{{ loop_templates_import.prefix | default(omit) }}"
+    repo: "{{ loop_templates_import.repo | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+    verbose: "{{ loop_templates_import.verbose | default(omit) }}"
+  loop: "{{ tp_foreman_configure_templates_imports }}"
+  loop_control:
+    loop_var: loop_templates_import
+    label: "{{ loop_templates_import.repo }}"
+  tags:
+    - templates_import
+
+# I doubt that the repo is optional...

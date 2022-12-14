@@ -1,0 +1,13 @@
+---
+foreman_certificates: {}
+## Keys should be encrypted (e.g. by means of ansible-vault).
+#  ca:
+#    cert: |
+#      ascii-armored cert here.
+#  foreman.some.where:
+#    cert: |
+#      ascii-armored cert here.
+#    key: !vault |
+#      $ANSIBLE_VAULT;1.1;AES256
+#      623563646363316[...]
+#      let's pretend this is a valid secret key

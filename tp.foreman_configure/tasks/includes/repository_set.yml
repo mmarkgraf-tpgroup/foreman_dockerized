@@ -1,0 +1,26 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/repository_set_module.html#ansible-collections-theforeman-foreman-repository-set-module
+- name: repository_set
+  theforeman.foreman.repository_set:
+    all_repositories: "{{ loop_repository_set.all_repositories | default(omit) }}"
+    basearch: "{{ loop_repository_set.basearch | default(omit) }}"
+    label: "{{ loop_repository_set.label | default(omit) }}"
+    name: "{{ loop_repository_set.name | default(omit) }}"
+    organization: "{{ loop_repository_set.organization }}"
+    password: "{{ tp_foreman_configure_password }}"
+    product: "{{ loop_repository_set.product | default(omit) }}"
+    releasever: "{{ loop_repository_set.releasever | default(omit) }}"
+    repositories: "{{ loop_repository_set.repositories | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_repository_sets }}"
+  loop_control:
+    loop_var: loop_repository_set
+  tags:
+    - repository_set
+
+  # Note:
+  # None of label, name or product are required.
+  # -> We need a convention which to set.

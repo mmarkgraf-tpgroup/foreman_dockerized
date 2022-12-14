@@ -1,0 +1,49 @@
+---
+# Todo: if below fails, do an update of the resource instead of creating it.
+# ? Should I reverse this?  Updates will happen way more ofen than creation.
+# -> ignore_errors
+# -> PUT instead of POST, and needs ID
+# -> register list of results, loop over those with worng status_code.
+- name: create domain {{ loop_domain.name }}
+  uri:
+    url: "{{ tp_foreman_configure_server_url }}/api/domains"
+    url_username: "{{ tp_foreman_configure_user }}"
+    url_password: "{{ tp_foreman_configure_password }}"
+    force_basic_auth: yes
+    method: POST
+    body_format: json
+    body:
+     domain: "{{ loop_domain }}"
+    status_code:
+      # OK
+      - 201
+      # Unproscessable item -> already exists, do an update instead.
+      - 422
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  ignore_errors: yes
+  register: loop_domain_create_status
+  tags:
+    - domain
+    - host
+    - hostgroup
+
+- name: update domain {{ loop_domain.name }}
+  uri:
+    url: "{{ tp_foreman_configure_server_url }}/api/domains/{{ loop_domain_create_status.json.id }}"
+    url_username: "{{ tp_foreman_configure_user }}"
+    url_password: "{{ tp_foreman_configure_password }}"
+    force_basic_auth: yes
+    method: PUT
+    body_format: json
+    body:
+      domain: "{{ loop_domain }}"
+    status_code:
+      # OK
+      - 201
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  when: loop_domain_create_status == '422'
+  ignore_errors: yes
+  tags:
+    - domain
+    - host
+    - hostgroup

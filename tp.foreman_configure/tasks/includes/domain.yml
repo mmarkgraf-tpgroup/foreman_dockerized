@@ -1,0 +1,33 @@
+---
+- name: Create or update domain
+  include: domain_loop.yml
+  loop: "{{ tp_foreman_configure_domains }}"
+  loop_control:
+    loop_var: loop_domain
+    label: "{{ loop_domain.name }}"
+
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/domain_module.html#ansible-collections-theforeman-foreman-domain-module
+
+# Module searches for smart-proxies named as the dns-hash.  I'll file an issue.
+#- name: domain
+#  theforeman.foreman.domain:
+#    description: "{{ loop_domain.description | default(omit) }}"
+#    #fullname: "{{ loop_domain.fullname | default(omit) }}"
+#    #dns_proxy: "{{ loop_domain.dns_proxy | default(omit) }}"
+#    dns: "'{{ loop_domain.dns | default(omit) }}'"
+#    locations: "{{ loop_domain.locations | default(tp_foreman_configure_default_locations) }}"
+#    name: "{{ loop_domain.name }}"
+#    organizations: "{{ loop_domain.organizations | default(tp_foreman_configure_default_organizations) }}"
+#    parameters: "{{ loop_domain.parameters | default(omit) }}"
+#    password: "{{ tp_foreman_configure_password }}"
+#    server_url: "{{ tp_foreman_configure_server_url }}"
+#    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+#    updated_name: "{{ loop_domain.updated_name | default(omit) }}"
+#    username: "{{ tp_foreman_configure_user }}"
+#    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+#  loop: "{{ tp_foreman_configure_domains }}"
+#  loop_control:
+#    loop_var: loop_domain
+#    label: "{{ loop_domain.name }}"
+#  tags:
+#    - domain

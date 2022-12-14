@@ -1,0 +1,43 @@
+---
+# Todo: reverse the order.  Updates happen way more often.
+- name: Create smart_proxy {{ loop_smart_proxy.name }}
+  uri:
+    url: "{{ tp_foreman_configure_server_url }}/api/smart_proxies"
+    url_username: "{{ tp_foreman_configure_user }}"
+    url_password: "{{ tp_foreman_configure_password }}"
+    force_basic_auth: yes
+    method: POST
+    body_format: json
+    body:
+      smart_proxy: "{{ loop_smart_proxy }}"
+    status_code:
+      - 201
+      - 422
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  register: loop_smart_proxy_create_status
+  ignore_errors: yes
+  tags:
+    - smart_proxy
+    - hostgroup
+    - host
+
+- name: Update smart_proxy {{ loop_smart_proxy.name }}
+  uri:
+    url: "{{ tp_foreman_configure_server_url }}/api/smart_proxies/{{ loop_smart_proxy_create_status.json.id }}"
+    url_username: "{{ tp_foreman_configure_user }}"
+    url_password: "{{ tp_foreman_configure_password }}"
+    force_basic_auth: yes
+    method: PUT
+    body_format: json
+    body:
+      smart_proxy: "{{ loop_smart_proxy }}"
+    status_code:
+      - 201
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  register: loop_smart_proxy_update_status
+  ignore_errors: yes
+  when: loop_smart_proxy_create_status == '422'
+  tags:
+    - smart_proxy
+    - hostgroup
+    - host

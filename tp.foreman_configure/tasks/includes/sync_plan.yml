@@ -1,0 +1,23 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/sync_plan_module.html#ansible-collections-theforeman-foreman-sync-plan-module
+- name: sync_plan
+  theforeman.foreman.sync_plan:
+    cron_expression: "{{ loop_sync_plan.cron_expression | default(omit) }}"
+    description: "{{ loop_sync_plan.description | default(omit) }}"
+    enabled: "{{ loop_sync_plan.enabled }}"
+    interval: "{{ loop_sync_plan.interval }}"
+    name: "{{ loop_sync_plan.name }}"
+    organization: "{{ loop_sync_plan.organization }}"
+    password: "{{ tp_foreman_configure_password }}"
+    products: "{{ loop_sync_plan.products | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    sync_date: "{{ loop_sync_plan.sync_date }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_sync_plans }}"
+  loop_control:
+    loop_var: loop_sync_plan
+    label: "{{ loop_sync_plan.name }} [{{ loop_sync_plan.sync_date }}]"
+  tags:
+    - sync_plan

@@ -1,0 +1,18 @@
+---
+#https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/subscription_manifest_module.html#ansible-collections-theforeman-foreman-subscription-manifest-module
+- name: subscription_manifest
+  theforeman.foreman.subscription_manifest:
+    manifest_path: "{{ loop_subscription_manifest.manifest_path | default(omit) }}"
+    organization: "{{ loop_subscription_manifest.organization }}"
+    password: "{{ tp_foreman_configure_password }}"
+    repository_url: "{{ loop_subscription_manifest.repository_url | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_subscription_manifests }}"
+  loop_control:
+    loop_var: loop_subscription_manifest
+    label: "{{ loop_subscription_manifest.manifest_path | default(omit) }} [{{ loop_subscription_manifest.organization }}]"
+  tags:
+    - subscription_manifest

@@ -1,0 +1,50 @@
+---
+- name: Converge
+  hosts: all
+
+  vars:
+    converge_pass: Gandalf
+
+  tasks:
+    - name: register start time
+      shell: date -u +%s
+      register: foreman_start_time
+      tags: ['always']
+
+# vagrant-box debian/buster64 is missing gpg.  Every older box has it.
+    - name: install gpg
+      package:
+        name: gpg
+      become: True
+      tags: ['always']
+
+## not published.  It's a role that deploys company-internal certificates that should be trusted
+#    - name: Include tp.trust_certs
+#      include_role:
+#        name: tp.trust_certs
+#      tags: ['always']
+
+    - name: Include foreman
+      include_role:
+        name: foreman
+      tags: ['always']
+      vars:
+        ansible_domain: localdomain
+        foreman_password: "{{ converge_pass }}"
+        foreman_user: admin
+        stage: development
+
+    - name: register stop time
+      shell: date -u +%s
+      register: foreman_stop_time
+      tags: ['always']
+
+    - name: calculate run-duration
+      shell: date -u -d "0 {{ foreman_stop_time.stdout }} seconds - {{ foreman_start_time.stdout }} seconds" +"%H:%M:%S"
+      register: foreman_run_duration
+      tags: ['always']
+
+    - name: We have run for...
+      debug:
+        msg: "{{ foreman_run_duration.stdout }} (hours:minutes:seconds)"
+      tags: ['always']

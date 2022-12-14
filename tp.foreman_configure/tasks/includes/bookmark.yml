@@ -1,0 +1,18 @@
+---
+- name: bookmark
+  theforeman.foreman.bookmark:
+    controller: "{{ loop_bookmark.controller }}"
+    name: "{{ loop_bookmark.name }}"
+    password: "{{ tp_foreman_configure_password }}"
+    public: "{{ loop_bookmark.public | default(omit) }}"
+    query: "{{ loop_bookmark.query | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_bookmarks }}"
+  loop_control:
+    loop_var: loop_bookmark
+    label: "{{ loop_bookmark.name }} [{{ loop_bookmark.controller }}]"
+  tags:
+    - bookmark

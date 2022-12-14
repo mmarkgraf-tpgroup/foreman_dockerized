@@ -1,0 +1,18 @@
+---
+## Create vmware compute resource:
+#  - name: example_compute_resource
+#    description: (optional, defaults to empty string)
+#    locations:
+#      - Munich
+#    organizations:
+#      - ACME
+#    provider: vmware
+#    provider_params:
+#      caching_enabled: yes / no (optional, defaults to "yes")
+#      datacenter: mandatory
+#      password: mandatory
+#      url: mandatory
+#      user: mandatory
+#    state: present (optional, defaults to "present")
+#    updated_name: (optional, defaults to name)
+foreman_compute_resources: []

@@ -1,0 +1,21 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/scap_content_module.html#ansible-collections-theforeman-foreman-scap-content-module
+- name: scap_content
+  theforeman.foreman.scap_content:
+    locations: "{{ loop_scap_content.locations | default(tp_foreman_configure_default_locations) }}"
+    organizations: "{{ loop_scap_content.organizations | default(tp_foreman_configure_default_organizations) }}"
+    original_filename: "{{ loop_scap_content.original_filename | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    scap_file: "{{ loop_scap_content.scap_file | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    title: "{{ loop_scap_content.title }}"
+    updated_title: "{{ loop_scap_content.updated_title | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_scap_contents }}"
+  loop_control:
+    loop_var: loop_scap_content
+    label: "{{ loop_scap_content.title }}"
+  tags:
+    - scap_content

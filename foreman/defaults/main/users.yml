@@ -1,0 +1,17 @@
+---
+# Todo: can I use an AD lookup here somhow?
+foreman_users: []
+# - admin: false
+#    auth_source: some.where
+#    effective_admin: true
+#    firstname: Marco
+#    lastname: Markgraf
+#    locale: de
+#    login: marco.markgraf_adm@some.where
+#    mail: me@work
+#    ssh_keys:
+#    - fingerprint: 8c:ee:5f:3e:6d:71:e9:f1:6b:27:70:11:1c:fb:df:71
+#      key: ssh-rsa AAAAB3Nza[...]ApQdo0fA4wB8eA3c=
+#      length: 3072
+#      name: me@my-notebook
+#    timezone: Berlin

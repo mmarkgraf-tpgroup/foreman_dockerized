@@ -1,0 +1,59 @@
+digraph G {
+  ranksep = 3;
+  concentrate = true;
+  activation_key -> { organization content_view host_collection lifecycle_environment }
+  architecture -> {}
+  auth_source_ldap -> organization
+  bookmark -> {}
+  compute_attribute -> { compute_profile compute_resource }
+  compute_profile -> { compute_attribute compute_resource }
+  compute_resource -> organization
+  config_group -> {}
+  content_credential -> organization
+  content_upload -> { organization product repository }
+  content_view -> { organization product }
+  content_view_filter -> { architecture content_view organization repository }
+  content_view_version -> { content_view lifecycle_environment organization }
+  domain -> { location organization }
+  external_usergroup -> { auth_source_ldap usergroup }
+  global_parameter -> {}
+  hardware_model -> {}
+  host -> { architecture compute_attribute compute_profile compute_resource config_group content_view domain hostgroup image lifecycle_environment location operatingsystem organization realm subnet }
+  host_collection -> { organization }
+  host_power -> { host }
+  hostgroup -> { architecture compute_attribute compute_profile compute_resource config_group content_view domain image lifecycle_environment location operatingsystem organization realm subnet }
+  http_proxy -> { location organization }
+  image -> { architecture compute_resource operatingsystem }
+  installation_medium -> { location operatingsystem organization }
+  job_template -> { location organization }
+  lifecycle_environment -> { organization }
+  location -> { organization }
+  operatingsystem -> { architecture }
+  organization -> {}
+  os_default_template -> { operatingsystem }
+  partition_table -> { location organization }
+  product -> { organization }
+  provisioning_template -> { location operatingsystem organization }
+  puppet_environment -> { location organization }
+  realm -> { location organization }
+  redhat_manifest -> {}
+  repository -> { organization product }
+  repository_set -> { organization repository }
+  repository_sync -> { organization product repository }
+  resource_info -> { organization }
+  role -> { location organization }
+  scap_content -> { location organization }
+  scap_tailoring_file -> { location organization }
+  scc_account -> { organization }
+  scc_product -> { organization scc_account }
+  setting -> {}
+  smart_class_parameter -> {}
+  smart_proxy -> { setting }
+  snapshot -> { host }
+  subnet -> { location organization}
+  subscription_manifest -> { organization }
+  sync_plan -> { organization product }
+  templates_import -> { location organization }
+  user -> { auth_source_ldap location organization role }
+  usergroup -> { role user }
+}

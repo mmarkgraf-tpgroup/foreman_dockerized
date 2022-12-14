@@ -1,0 +1,20 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/host_collection_module.html#ansible-collections-theforeman-foreman-host-collection-module
+- name: host_collection
+  theforeman.foreman.host_collection:
+    description: "{{ loop_host_collection.description | default(omit) }}"
+    name: "{{ loop_host_collection.name }}"
+    organization: "{{ loop_host_collection.organization }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    updated_name: "{{ loop_host_collection.updated_name | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_host_collections }}"
+  loop_control:
+    loop_var: loop_host_collection
+    label: "{{ loop_host_collection.name }} [{{ loop_host_collection.organization }}]"
+  tags:
+    - host_collection
+    - activation_key

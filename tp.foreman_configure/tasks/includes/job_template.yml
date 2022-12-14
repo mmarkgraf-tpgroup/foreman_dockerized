@@ -1,0 +1,33 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/job_template_module.html#ansible-collections-theforeman-foreman-job-template-module
+- name: job_template
+  theforeman.foreman.job_template:
+    audit_comment: "{{ loop_job_template.audit_comment | default(omit) }}"
+    description_format: "{{ loop_job_template.description_format | default(omit) }}"
+    file_name: "{{ loop_job_template.file_name | default(omit) }}"
+    input_type: "{{ loop_job_template.input_type }}"
+    job_category: "{{ loop_job_template.job_category | default(omit) }}"
+    locations: "{{ loop_job_template.locations | default(tp_foreman_configure_default_locations) }}"
+    locked: "{{ loop_job_template.locked | default(omit) }}"
+    # name is optional m(
+    name: "{{ loop_job_template.name | default(omit) }}"
+    organizations: "{{ loop_job_template.organizations | default(tp_foreman_configure_default_organizations) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    provider_type: "{{ loop_job_template.provider_type | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    template: "{{ loop_job_template.template | default(omit) }}"
+    template_inputs: "{{ loop_job_template.template_inputs | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_job_templates }}"
+  loop_control:
+    loop_var: loop_job_template
+    label: "{{ loop_job_template.name | default(omit) }}{{ loop_job_template.template | default(omit) }}"
+  tags:
+    - job_template
+
+# Note:
+# Either "file_name" or "template" are required.
+# "template_inputs" require a list of dictionaries,
+# where name and input_type are mandatory.

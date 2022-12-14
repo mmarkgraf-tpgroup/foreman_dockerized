@@ -1,0 +1,21 @@
+---
+- name: compute_profile
+  theforeman.foreman.compute_profile:
+    compute_attributes: "{{ loop_compute_profile.compute_attributes | default(omit) }}"
+    compute_resource: "{{ loop_compute_profile.compute_resource | default(omit) }}"
+    name: "{{ loop_compute_profile.name }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    updated_name: "{{ loop_compute_profile.updated_name | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+    vm_attrs: "{{ loop_compute_profile.vm_attrs | default(omit) }}"
+  loop: "{{ tp_foreman_configure_compute_profiles }}"
+  loop_control:
+    loop_var: loop_compute_profile
+    label: "{{ loop_compute_profile.name }}"
+  tags:
+    - compute_profile
+    - host
+    - hostgroup

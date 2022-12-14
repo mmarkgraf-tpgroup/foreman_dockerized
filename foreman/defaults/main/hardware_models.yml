@@ -1,0 +1,6 @@
+---
+foreman_hardware_models: []
+## A list of dicts, with 'name' being the only key.
+#  - name: ProLiant DL380 Gen9
+#  - name: ProLiant DL580 Gen9
+#  - name: VMware Virtual Platform

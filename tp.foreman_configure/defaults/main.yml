@@ -1,0 +1,187 @@
+---
+# Each and every foreman-ansible-module needs these three.
+tp_foreman_configure_server_url: http://localhost:3000
+tp_foreman_configure_user: admin
+tp_foreman_configure_password: ''
+
+# ! DO NOT SORT! Modules MUST be processed in this specific order.
+# ! See explanation in README.md.
+# ! Overwrite the list if you do not use all items, but keep the relative order!
+tp_foreman_configure_remove_defaults: no
+tp_foreman_configure_modules_in_topological_order:
+  - organization
+  - smart_class_parameter
+  - setting
+  - smart_proxy
+  - redhat_manifest # not yet implemented. Docs unclear.
+  - hardware_model
+  - global_parameter
+  - config_group
+  - bookmark
+  - architecture # we only have the default 2: x86_64 and i386
+  - subscription_manifest
+  - scc_account
+  - scc_product
+  - resource_info
+  - location
+  - templates_import
+  - scap_tailoring_file
+  - scap_content
+  - role
+  - puppet_environment
+  - partition_table
+  - operatingsystem
+  - provisioning_template
+  - os_default_template
+  - job_template
+  - installation_medium
+  - http_proxy
+  - subnet
+  - realm
+  - domain
+  - product
+  - sync_plan
+  - repository
+  - repository_sync
+  - repository_set
+  - content_upload
+  - content_credential
+  - compute_resource
+  - image
+  - compute_attribute
+  - compute_profile
+  - auth_source_ldap
+  - user
+  - usergroup
+  - external_usergroup
+  - lifecycle_environment
+  - host_collection
+  - content_view
+  - hostgroup
+  - host
+  - snapshot
+  - host_power
+  - content_view_version
+  - content_view_filter
+  - activation_key
+
+# One empty list for each foreman-ansible-module
+tp_foreman_configure_activation_keys: []
+tp_foreman_configure_architectures: []
+tp_foreman_configure_auth_source_ldaps: []
+tp_foreman_configure_bookmarks: []
+tp_foreman_configure_compute_attributes: []
+tp_foreman_configure_compute_profiles: []
+tp_foreman_configure_compute_resources: []
+tp_foreman_configure_config_groups: []
+tp_foreman_configure_content_credentials: []
+tp_foreman_configure_content_uploads: []
+tp_foreman_configure_content_views: []
+tp_foreman_configure_content_view_filters: []
+tp_foreman_configure_content_view_versions: []
+tp_foreman_configure_domains: []
+tp_foreman_configure_external_usergroups: []
+tp_foreman_configure_global_parameters: []
+tp_foreman_configure_hardware_models: []
+tp_foreman_configure_hosts: []
+tp_foreman_configure_host_collections: []
+tp_foreman_configure_host_powers: []
+tp_foreman_configure_hostgroups: []
+tp_foreman_configure_http_proxys: []
+tp_foreman_configure_images: []
+tp_foreman_configure_installation_mediums: []
+tp_foreman_configure_job_templates: []
+tp_foreman_configure_lifecycle_environments: []
+tp_foreman_configure_locations: []
+tp_foreman_configure_operatingsystems: []
+tp_foreman_configure_organizations: []
+tp_foreman_configure_os_default_templates: []
+tp_foreman_configure_partition_tables: []
+tp_foreman_configure_products: []
+tp_foreman_configure_provisioning_templates: []
+tp_foreman_configure_puppet_environments: []
+tp_foreman_configure_realms: []
+tp_foreman_configure_redhat_manifests: []
+tp_foreman_configure_repositorys: []
+tp_foreman_configure_repository_sets: []
+tp_foreman_configure_repository_syncs: []
+tp_foreman_configure_roles: []
+tp_foreman_configure_scap_contents: []
+tp_foreman_configure_scap_tailoring_files: []
+tp_foreman_configure_scc_accounts: []
+tp_foreman_configure_scc_products: []
+tp_foreman_configure_settings: []
+tp_foreman_configure_smart_class_parameters: []
+tp_foreman_configure_smart_proxies: []
+tp_foreman_configure_snapshots: []
+tp_foreman_configure_subnets: []
+tp_foreman_configure_subscription_manifests: []
+tp_foreman_configure_sync_plans: []
+tp_foreman_configure_templates_imports: []
+tp_foreman_configure_users: []
+tp_foreman_configure_usergroups: []
+
+# These resources are supported by the resource_info module by version 1.4.0
+tp_foreman_configure_resource_infos:
+  - resource: architectures
+  - resource: audits
+  - resource: auth_source_externals
+  - resource: auth_source_internals
+  - resource: auth_source_ldaps
+  - resource: auth_sources
+  - resource: autosign
+  - resource: bookmarks
+  - resource: common_parameters
+  - resource: compute_attributes
+  - resource: compute_profiles
+  - resource: compute_resources
+  - resource: config_groups
+  - resource: config_reports
+  - resource: dashboard
+  - resource: domains
+  - resource: environments
+  - resource: external_usergroups
+  - resource: fact_values
+  - resource: filters
+  - resource: home
+  - resource: host_classes
+  - resource: hostgroup_classes
+  - resource: hostgroups
+  - resource: hosts
+  - resource: http_proxies
+  - resource: images
+  - resource: interfaces
+  - resource: locations
+  - resource: mail_notifications
+  - resource: media
+  - resource: models
+  - resource: operatingsystems
+  - resource: organizations
+  - resource: os_default_templates
+  - resource: override_values
+  - resource: parameters
+  - resource: permissions
+  - resource: personal_access_tokens
+  - resource: ping
+  - resource: plugins
+  - resource: provisioning_templates
+  - resource: ptables
+  - resource: puppet_hosts
+  - resource: puppetclasses
+  - resource: realms
+  - resource: report_templates
+  - resource: roles
+  - resource: settings
+  - resource: smart_class_parameters
+  - resource: smart_proxies
+  - resource: ssh_keys
+  - resource: statistics
+  - resource: subnets
+  - resource: table_preferences
+  - resource: tasks
+  - resource: template_combinations
+  - resource: template_inputs
+  - resource: template_kinds
+  - resource: trends
+  - resource: usergroups
+  - resource: users

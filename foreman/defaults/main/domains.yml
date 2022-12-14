@@ -1,0 +1,11 @@
+---
+foreman_domains: []
+## A list of dictionaires:
+#  - name: dv.some.where
+#    dns:
+#      name: DNS for DEV
+#      url: http://somehost.some.where:8000
+#  - name: pd.some.where
+#    dns:
+#      name: DNS for Production
+#      url: http://somehost.some.where:8000

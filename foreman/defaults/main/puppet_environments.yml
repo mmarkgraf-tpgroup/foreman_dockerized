@@ -1,0 +1,7 @@
+---
+foreman_puppet_environments:
+  - name: production
+    organizations:
+      - Default Organization
+    locations:
+      - Default Location

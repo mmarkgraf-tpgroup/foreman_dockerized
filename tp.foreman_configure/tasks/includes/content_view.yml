@@ -1,0 +1,29 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/content_view_module.html#ansible-collections-theforeman-foreman-content-view-module
+- name: content_view
+  theforeman.foreman.content_view:
+    auto_publish: "{{ loop_content_view.auto_publish | default(omit) }}"
+    components: "{{ loop_content_view.components | default(omit) }}"
+    composite: "{{ loop_content_view.composite | default(omit) }}"
+    content_view: "{{ loop_content_view.content_view }}"
+    content_view_version: "{{ loop_content_view.content_view_version | default(omit) }}"
+    description: "{{ loop_content_view.description | default(omit) }}"
+    latest: "{{ loop_content_view.latest | default(omit) }}"
+    name: "{{ loop_content_view.name }}"
+    organization: "{{ loop_content_view.organization }}"
+    password: "{{ tp_foreman_configure_password }}"
+    repositories: "{{ loop_content_view.repositories | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_content_views }}"
+  loop_control:
+    loop_var: loop_content_view
+    label: "{{ loop_content_view.name }}"
+  tags:
+    - content_view
+    - content_view_filter
+    - content_view_version
+    - host
+    - hostgroup

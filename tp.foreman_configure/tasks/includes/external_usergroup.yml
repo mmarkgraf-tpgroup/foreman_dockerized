@@ -1,0 +1,18 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/external_usergroup_module.html#ansible-collections-theforeman-foreman-external-usergroup-module
+- name: external_usergroup
+  theforeman.foreman.external_usergroup:
+    auth_source_ldap: "{{ loop_external_usergroup.auth_source_ldap }}"
+    name: "{{ loop_external_usergroup.name }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    usergroup: "{{ loop_external_usergroup.usergroup }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_external_usergroups }}"
+  loop_control:
+    loop_var: loop_external_usergroup
+    label: "{{ loop_external_usergroup.name }} [{{ loop_external_usergroup.usergroup }}]"
+  tags:
+    - external_usergroup

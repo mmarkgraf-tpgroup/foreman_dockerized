@@ -1,0 +1,35 @@
+---
+# https://theforeman.org/plugins/foreman-ansible-modules/
+- name: location
+  theforeman.foreman.location:
+    name: "{{ loop_location.name }}"
+    organizations: "{{ loop_location.organizations | default(tp_foreman_configure_default_organizations) }}"
+    parameters: "{{ loop_location.parameters | default(omit) }}"
+    parent: "{{ loop_location.parent | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_locations }}"
+  loop_control:
+    loop_var: loop_location
+    label: "{{ loop_location.name }}"
+  tags:
+    - location
+    - domain
+    - host
+    - hostgroup
+    - http_proxy
+    - installation_medium
+    - job_template
+    - partition_table
+    - provisioning_template
+    - puppet_environment
+    - realm
+    - role
+    - scap_content
+    - scap_tailoring_file
+    - subnet
+    - templates_import
+    - user

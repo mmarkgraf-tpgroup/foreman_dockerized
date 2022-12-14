@@ -1,0 +1,32 @@
+---
+- name: Ensure data folder for postgres local db is present
+  file:
+    path: "/srv/{{ tp_foreman_service_name }}/{{ item }}"
+    state: directory
+    mode: 0750
+  become_user: "{{ tp_foreman_service_user }}"
+  become: True
+  loop:
+    - db
+    - db/data
+
+- name: Create Docker volumes
+  docker_volume:
+    name: database
+  become: True
+  become_user: "{{ tp_foreman_service_user }}"
+
+- name: Create Database container
+  docker_container:
+    name: "{{ tp_foreman_container_db_name }}"
+    image: "{{ tp_foreman_container_db_image }}:{{ tp_foreman_container_db_version }}"
+    env: "{{ tp_foreman_container_db_env }}"
+    networks: "{{ tp_foreman_container_db_networks }}"
+    purge_networks: "{{ tp_foreman_container_db_purge_networks }}"
+    volumes: "{{ tp_foreman_container_db_volumes }}"
+    ports: "{{ tp_foreman_container_db_ports }}"
+    # container_default_behavior: no_defaults
+    networks_cli_compatible: no
+    restart_policy: always
+  become: True
+  become_user: "{{ tp_foreman_service_user }}"

@@ -1,0 +1,33 @@
+---
+- name: activation_key
+  theforeman.foreman.activation_key:
+    auto_attach: "{{ loop_activation_key.auto_attach | default(omit) }}"
+    content_overrides: "{{ loop_activation_key.content_overrides | default(omit) }}"
+    content_view: "{{ loop_activation_key.content_view | default(omit) }}"
+    description: "{{ loop_activation_key.description | default(omit) }}"
+    host_collections: "{{ loop_activation_key.host_collections | default(omit) }}"
+    label: "{{ loop_activation_key.label }}"
+    lifecycle_environment: "{{ loop_activation_key.lifecycle_environment | default(omit) }}"
+    max_hosts: "{{ loop_activation_key.max_hosts | default(omit) }}"
+    name: "{{ loop_activation_key.name }}"
+    new_name: "{{ loop_activation_key.new_name | default(omit) }}"
+    organization: "{{ loop_activation_key.organization }}"
+    override: "{{ loop_activation_key.override }}"
+    password: "{{ tp_foreman_configure_password }}"
+    purpose_addons: "{{ loop_activation_key.purpose_addons | default(omit) }}"
+    purpose_role: "{{ loop_activation_key.purpose_role | default(omit) }}"
+    purpose_usage: "{{ loop_activation_key.purpose_usage | default(omit) }}"
+    release_version: "{{ loop_activation_key.release_version | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    service_level: "{{ loop_activation_key.service_level | default(omit) }}"
+    state: "{{ loop_activation_key.state | default(omit) }}"
+    subscriptions: "{{ loop_activation_key.subscriptions | default(omit) }}"
+    unlimited_hosts: "{{ loop_activation_key.unlimited_hosts | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_activation_keys }}"
+  loop_control:
+    loop_var: loop_activation_key
+    label: "{{ loop_activation_key.name }}"
+  tags:
+    - activation_key

@@ -1,0 +1,8 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v2.0.1/plugins/host_module.html#ansible-collections-theforeman-foreman-host-module
+- name: Create or update host
+  include: host_loop.yml
+  loop: "{{ tp_foreman_configure_hosts }}"
+  loop_control:
+    loop_var: loop_host
+    label: "{{ loop_host.name }} [{{ loop_host.organization | default('Default') }}/{{ loop_host.location | default('Default')}}]"

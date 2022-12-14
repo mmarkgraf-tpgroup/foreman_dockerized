@@ -1,0 +1,19 @@
+---
+- name: global_parameter
+  theforeman.foreman.global_parameter:
+    name: "{{ loop_global_parameter.name }}"
+    parameter_type: "{{ loop_global_parameter.parameter_type | default(string) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    updated_name: "{{ loop_global_parameter.updated_name | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+    value: "{{ loop_global_parameter.value | default(omit) }}"
+  loop: "{{ tp_foreman_configure_global_parameters }}"
+  loop_control:
+    loop_var: loop_global_parameter
+    label: "{{ loop_global_parameter.name }} [{{ loop_global_parameter.parameter_type | default(string) }}]"
+  tags:
+    - global_parameter
+    - always

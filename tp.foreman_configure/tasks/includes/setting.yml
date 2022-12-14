@@ -1,0 +1,18 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/setting_module.html#ansible-collections-theforeman-foreman-setting-module
+- name: setting
+  theforeman.foreman.setting:
+    name: "{{ loop_setting.name }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+    value: "{{ loop_setting.value | default(omit) }}"
+  loop: "{{ tp_foreman_configure_settings }}"
+  loop_control:
+    loop_var: loop_setting
+    label: "{{ loop_setting.name }}"
+  tags:
+    - setting
+    - always

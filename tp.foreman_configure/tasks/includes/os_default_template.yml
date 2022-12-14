@@ -1,0 +1,18 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/os_default_template_module.html#ansible-collections-theforeman-foreman-os-default-template-module
+- name: os_default_template
+  theforeman.foreman.os_default_template:
+    operatingsystem: "{{ loop_os_default_template.operatingsystem }}"
+    password: "{{ tp_foreman_configure_password }}"
+    provisioning_template: "{{ loop_os_default_template.provisioning_template | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    template_kind: "{{ loop_os_default_template.template_kind }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_os_default_templates }}"
+  loop_control:
+    loop_var: loop_os_default_template
+    label: "{{ loop_os_default_template.operatingsystem }} [{{ loop_os_default_template.template_kind }}]"
+  tags:
+    - os_default_template

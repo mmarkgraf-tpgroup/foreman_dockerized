@@ -1,0 +1,43 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/subnet_module.html#ansible-collections-theforeman-foreman-subnet-module
+- name: subnet
+  theforeman.foreman.subnet:
+    boot_mode: "{{ loop_subnet.boot_mode | default(omit) }}"
+    cidr: "{{ loop_subnet.cidr | default(omit) }}"
+    description: "{{ loop_subnet.description | default(omit) }}"
+    dhcp_proxy: "{{ loop_subnet.dhcp_proxy | default(omit) }}"
+    discovery_proxy: "{{ loop_subnet.discovery_proxy | default(omit) }}"
+    dns_primary: "{{ loop_subnet.dns_primary | default(omit) }}"
+    dns_proxy: "{{ loop_subnet.dns_proxy | default(omit) }}"
+    dns_secondary: "{{ loop_subnet.dns_secondary | default(omit) }}"
+    domains: "{{ loop_subnet.domains | default(omit) }}"
+    from_ip: "{{ loop_subnet.from_ip | default(omit) }}"
+    gateway: "{{ loop_subnet.gateway | default(omit) }}"
+    httpboot_proxy: "{{ loop_subnet.httpboot_proxy | default(omit) }}"
+    ipam: "{{ loop_subnet.ipam | default(omit) }}"
+    locations: "{{ loop_subnet.locations | default(tp_foreman_configure_default_locations) }}"
+    mask: "{{ loop_subnet.mask | default(omit) }}"
+    mtu: "{{ loop_subnet.mtu | default(omit) }}"
+    name: "{{ loop_subnet.name }}"
+    network: "{{ loop_subnet.network }}"
+    network_type: "{{ loop_subnet.network_type | default(omit) }}"
+    organizations: "{{ loop_subnet.organizations | default(tp_foreman_configure_default_organizations) }}"
+    parameters: "{{ loop_subnet.parameters | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    remote_execution_proxies: "{{ loop_subnet.remote_execution_proxies | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    template_proxy: "{{ loop_subnet.template_proxy | default(omit) }}"
+    to_ip: "{{ loop_subnet.to_ip | default(omit) }}"
+    updated_name: "{{ loop_subnet.updated_name | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+    vlanid: "{{ loop_subnet.vlanid | default(omit) }}"
+  loop: "{{ tp_foreman_configure_subnets }}"
+  loop_control:
+    loop_var: loop_subnet
+    label: "{{ loop_subnet.name }} [{{ loop_subnet.network }}]"
+  tags:
+    - subnet
+    - host
+    - hostgroup

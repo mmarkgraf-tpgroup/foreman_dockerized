@@ -1,0 +1,17 @@
+galaxy_info:
+  author: Marco Markgraf <marco.markgraf@transporeon.com>
+  description: Configure Foreman
+  company: https://transporeon.com/
+  license: BSD 3-Clause License
+
+  min_ansible_version: '2.10'
+
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+
+  galaxy_tags:
+    - foreman
+
+dependencies: []

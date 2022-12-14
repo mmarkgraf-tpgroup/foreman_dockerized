@@ -1,0 +1,25 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/provisioning_template_module.html#ansible-collections-theforeman-foreman-provisioning-template-module
+- name: provisioning_template
+  theforeman.foreman.provisioning_template:
+    audit_comment: "{{ loop_provisioning_template.audit_comment | default(omit) }}"
+    file_name: "{{ loop_provisioning_template.file_name | default(omit) }}"
+    kind: "{{ loop_provisioning_template.kind | default(omit) }}"
+    locations: "{{ loop_provisioning_template.locations | default(tp_foreman_configure_default_locations) }}"
+    locked: "{{ loop_provisioning_template.locked | default(omit) }}"
+    name: "{{ loop_provisioning_template.name | default(omit) }}"
+    operatingsystems: "{{ loop_provisioning_template.operatingsystems | default(omit) }}"
+    organizations: "{{ loop_provisioning_template.organizations | default(tp_foreman_configure_default_organizations) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    template: "{{ loop_provisioning_template.template | default(omit) }}"
+    updated_name: "{{ loop_provisioning_template.updated_name | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_provisioning_templates }}"
+  loop_control:
+    loop_var: loop_provisioning_template
+    label: "{{ loop_provisioning_template.name }}"
+  tags:
+    - provisioning_template

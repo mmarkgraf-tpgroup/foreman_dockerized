@@ -1,0 +1,19 @@
+---
+- name: config_group
+  theforeman.foreman.config_group:
+    name: "{{ loop_config_group.name }}"
+    password: "{{ tp_foreman_configure_password }}"
+    puppetclasses: "{{ loop_config_group.puppetclasses | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    updated_name: "{{ loop_config_group.updated_name | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_config_groups }}"
+  loop_control:
+    loop_var: loop_config_group
+    label: "{{ loop_config_group.name }}"
+  tags:
+    - config_group
+    - host
+    - hostgroup

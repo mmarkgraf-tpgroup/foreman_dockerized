@@ -1,0 +1,35 @@
+---
+- name: auth_source_ldap
+  theforeman.foreman.auth_source_ldap:
+    account: "{{ loop_auth_source_ldap.account | default(omit) }}"
+    account_password: "{{ loop_auth_source_ldap.account_password | default(omit) }}"
+    attr_firstname: "{{ loop_auth_source_ldap.attr_firstname | default(omit) }}"
+    attr_lastname: "{{ loop_auth_source_ldap.attr_lastname | default(omit) }}"
+    attr_login: "{{ loop_auth_source_ldap.attr_login | default(omit) }}"
+    attr_mail: "{{ loop_auth_source_ldap.attr_mail | default(omit) }}"
+    attr_photo: "{{ loop_auth_source_ldap.attr_photo | default(omit) }}"
+    base_dn: "{{ loop_auth_source_ldap.base_dn | default(omit) }}"
+    groups_base: "{{ loop_auth_source_ldap.groups_base | default(omit) }}"
+    host: "{{ loop_auth_source_ldap.host }}"
+    ldap_filter: "{{ loop_auth_source_ldap.ldap_filter | default(omit) }}"
+    locations: "{{ loop_auth_source_ldap.locations | default(tp_foreman_configure_default_locations) }}"
+    name: "{{ loop_auth_source_ldap.name }}"
+    onthefly_register: "{{ loop_auth_source_ldap.onthefly_register | default(omit) }}"
+    organizations: "{{ loop_auth_source_ldap.organizations | default(tp_foreman_configure_default_organizations) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    port: "{{ loop_auth_source_ldap.port | default(omit) }}"
+    server_type: "{{ loop_auth_source_ldap.server_type | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    tls: "{{ loop_auth_source_ldap.tls | default(omit) }}"
+    use_netgroups: "{{ loop_auth_source_ldap.use_netgroups | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_auth_source_ldaps }}"
+  loop_control:
+    loop_var: loop_auth_source_ldap
+    label: "{{ loop_auth_source_ldap.name }}"
+  tags:
+    - auth_source_ldap
+    - external_usergroup
+    - user

@@ -1,0 +1,35 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/operatingsystem_module.html#ansible-collections-theforeman-foreman-operatingsystem-module
+- name: operatingsystem
+  theforeman.foreman.operatingsystem:
+    architectures: "{{ loop_operatingsystem.architectures | mandatory }}"
+    description: "{{ loop_operatingsystem.description | default(omit) }}"
+    major: "{{ loop_operatingsystem.major | default(omit) }}"
+    media: "{{ loop_operatingsystem.media | default(omit) }}"
+    minor: "{{ loop_operatingsystem.minor | default(omit) }}"
+    name: "{{ loop_operatingsystem.name }}"
+    os_family: "{{ loop_operatingsystem.os_family | mandatory }}"
+    parameters: "{{ loop_operatingsystem.parameters | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    password_hash: "{{ loop_operatingsystem.password_hash }}"
+    provisioning_templates: "{{ loop_operatingsystem.provisioning_templates | default(omit) }}"
+    ptables: "{{ loop_operatingsystem.ptables | default(omit) }}"
+    # release_name cannot be blank
+    release_name: "{{ loop_operatingsystem.release_name | default('unknown') }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    updated_name: "{{ loop_operatingsystem.updated_name | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_operatingsystems }}"
+  loop_control:
+    loop_var: loop_operatingsystem
+    label: "{{ loop_operatingsystem.name }}.{{ loop_operatingsystem.major }}.{{ loop_operatingsystem.minor | default('0') }}"
+  tags:
+    - operatingsystem
+    - host
+    - hostgroup
+    - image
+    - installation_medium
+    - os_default_template
+    - provisioning_template

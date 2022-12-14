@@ -1,0 +1,47 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/hostgroup_module.html#ansible-collections-theforeman-foreman-hostgroup-module
+- name: hostgroup
+  theforeman.foreman.hostgroup:
+    architecture: "{{ loop_hostgroup.architecture | default(omit) }}"
+    compute_profile: "{{ loop_hostgroup.compute_profile | default(omit) }}"
+    compute_resource: "{{ loop_hostgroup.compute_resource | default(omit) }}"
+    config_groups: "{{ loop_hostgroup.config_groups | default(omit) }}"
+    content_source: "{{ loop_hostgroup.content_source | default(omit) }}"
+    content_view: "{{ loop_hostgroup.content_view | default(omit) }}"
+    description: "{{ loop_hostgroup.description | default(omit) }}"
+    domain: "{{ loop_hostgroup.domain | default(omit) }}"
+    environment: "{{ loop_hostgroup.environment | default(omit) }}"
+    kickstart_repository: "{{ loop_hostgroup.kickstart_repository | default(omit) }}"
+    lifecycle_environment: "{{ loop_hostgroup.lifecycle_environment | default(omit) }}"
+    locations: "{{ loop_hostgroup.locations | default(tp_foreman_configure_default_locations) }}"
+    medium: "{{ loop_hostgroup.medium | default(omit) }}"
+    name: "{{ loop_hostgroup.name }}"
+    openscap_proxy: "{{ loop_hostgroup.openscap_proxy | default(omit) }}"
+    operatingsystem: "{{ loop_hostgroup.operatingsystem | default(omit) }}"
+    # Only used for Katello installations.
+    # This organization will implicitly be added to the organizations parameter if needed.
+    organization: "{{ loop_hostgroup.organization | default(tp_foreman_configure_default_organization) }}"
+    organizations: "{{ loop_hostgroup.organizations | default(tp_foreman_configure_default_organizations) }}"
+    parameters: "{{ loop_hostgroup.parameters | default(omit) }}"
+    parent: "{{ loop_hostgroup.parent | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    ptable: "{{ loop_hostgroup.ptable | default(omit) }}"
+    puppet_ca_proxy: "{{ loop_hostgroup.puppet_ca_proxy | default(omit) }}"
+    puppet_proxy: "{{ loop_hostgroup.puppet_proxy | default(omit) }}"
+    puppetclasses: "{{ loop_hostgroup.puppetclasses | default(omit) }}"
+    pxe_loader: "{{ loop_hostgroup.pxe_loader | default(omit) }}"
+    realm: "{{ loop_hostgroup.realm | default(omit) }}"
+    root_pass: "{{ loop_hostgroup.root_pass | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    subnet: "{{ loop_hostgroup.subnet | default(omit) }}"
+    subnet6: "{{ loop_hostgroup.subnet6 | default(omit) }}"
+    updated_name: "{{ loop_hostgroup.updated_name | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_hostgroups }}"
+  loop_control:
+    loop_var: loop_hostgroup
+    label: "{{ loop_hostgroup.name }}"
+  tags:
+    - hostgroup

@@ -1,0 +1,22 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/usergroup_module.html#ansible-collections-theforeman-foreman-usergroup-module
+- name: usergroup
+  theforeman.foreman.usergroup:
+    admin: "{{ loop_usergroup.admin | default(omit) }}"
+    name: "{{ loop_usergroup.name }}"
+    password: "{{ tp_foreman_configure_password }}"
+    roles: "{{ loop_usergroup.roles | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    updated_name: "{{ loop_usergroup.updated_name | default(omit) }}"
+    usergroups: "{{ loop_usergroup.usergroups | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    users: "{{ loop_usergroup.users | default(omit) }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_usergroups }}"
+  loop_control:
+    loop_var: loop_usergroup
+    label: "{{ loop_usergroup.name }}"
+  tags:
+    - usergroup
+    - external_usergroup

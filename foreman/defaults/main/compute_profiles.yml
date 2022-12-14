@@ -1,0 +1,9 @@
+---
+foreman_compute_profiles: []
+## Example
+#  - name: database-on-dev
+#  - name: applicationserver-on-dev
+#  - name: database-on-prod
+#  - name: applicationserver-on-prod
+#  - name: database-in-another-datacenter
+#  - name: applicationserver-in-another-datacenter

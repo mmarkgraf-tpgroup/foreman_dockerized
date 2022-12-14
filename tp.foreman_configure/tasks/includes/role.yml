@@ -1,0 +1,24 @@
+---
+# https://theforeman.github.io/foreman-ansible-modules/v1.2.0/plugins/role_module.html#ansible-collections-theforeman-foreman-role-module
+- name: role
+  theforeman.foreman.role:
+    description: "{{ loop_role.description | default(omit) }}"
+    filters: "{{ loop_role.filters | default(omit) }}"
+    locations: "{{ loop_role.locations | default(omit) }}"
+    name: "{{ loop_role.name }}"
+    organizations: "{{ loop_role.organizations | default(omit) }}"
+    password: "{{ tp_foreman_configure_password }}"
+    permissions: "{{ loop_role.permissions | default(omit) }}"
+    search: "{{ loop_role.search | default(omit) }}"
+    server_url: "{{ tp_foreman_configure_server_url }}"
+    state: "{{ loop_auth_source_ldap.state | default(omit) }}"
+    username: "{{ tp_foreman_configure_user }}"
+    validate_certs: "{{ tp_foreman_configure_validate_certs | default('yes') }}"
+  loop: "{{ tp_foreman_configure_roles }}"
+  loop_control:
+    loop_var: loop_role
+    label: "{{ loop_role.name }}"
+  tags:
+    - role
+    - user
+    - usergroup
